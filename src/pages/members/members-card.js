@@ -1,0 +1,171 @@
+import { faEye, faRandom, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  Card,
+  Chip,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from "@mui/material";
+import { t } from "i18next";
+import React, { useState } from "react";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import ButtonUI from "../../components/ui/button/button";
+import DateMoment from "../../components/ui/date-moment/date-moment";
+import {
+  svDeleteMember,
+  svGetMembersById
+} from "../../services/members.service";
+import SwalUI from "../../components/ui/swal-ui/swal-ui";
+import MemberModal from "./modal/member-modal";
+
+const modalSwal = withReactContent(Swal);
+
+const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
+  const [showData, setShowData] = useState({});
+
+  const editHandler = (_id) => {
+    svGetMembersById(_id).then((res) => {
+      console.log(res)
+      const result = {
+        id: res.data.id,
+        firstname: res.data.title || "",
+        lastname: res.data.details || "",
+        member_name: res.data.member_name || "",
+        member_status: res.data.member_status,
+        profile_image: res.data.profile_image || "",
+        created_at: res.data.created_at
+      };
+      setShowData(result);
+      setMemberModal(true);
+    });
+  };
+
+  const deleteHandler = (_id) => {
+    modalSwal
+      .fire({
+        icon: "warning",
+        title: "Are you sure?",
+        text: "I want to delete this data!",
+        confirmButtonText: "Yes, delete it",
+        confirmButtonColor: "#e11d48",
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          svDeleteMember(_id).then((res) => {
+            SwalUI({ status: res.status, description: res.description });
+            if (res.status) {
+              setRefreshData((prev) => prev + 1);
+            }
+          });
+        }
+      });
+  };
+
+  return (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>ID</TableCell>
+            <TableCell align="left">Profile Image</TableCell>
+            <TableCell align="left">Name</TableCell>
+            <TableCell align="center">Verify Time</TableCell>
+            <TableCell align="center">Status</TableCell>
+            <TableCell align="center">Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {item.map((row, index) => (
+            <TableRow
+              key={index}
+              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {index + 1}
+              </TableCell>
+              <TableCell align="left">
+                <Card sx={{ maxWidth: 100, height: 100 }}>
+                  <ImagePreview src={item.profile_image} />
+                </Card>
+              </TableCell>
+              <TableCell align="left">
+                {row.member_name}
+              </TableCell>
+              <TableCell align="center">
+                <DateMoment format={"LLL"} date={row.member_verify_at} />
+              </TableCell>
+              <TableCell align="center">
+                <Chip
+                  label={row.member_status}
+                  size="small"
+                  color={
+                    row.member_status.toLowerCase() === "confirm"
+                      ? "success"
+                      : row.member_status.toLowerCase() === "pending"
+                      ? "warning"
+                      : "error"
+                  }
+                />
+              </TableCell>
+              <TableCell align="center" className="column-action">
+                <ButtonUI
+                  onClick={(e) => editHandler(row.id)}
+                  on="show"
+                  className="btn-custom onShow"
+                  width="md"
+                  icon={<FontAwesomeIcon icon={faRandom} />}
+                >
+                  {t("Change")}
+                </ButtonUI>
+                <ButtonUI
+                  onClick={(e) => deleteHandler(row.id)}
+                  on="delete"
+                  className="btn-custom onDelete"
+                  icon={<FontAwesomeIcon icon={faTrash} />}
+                >
+                  {t("Delete")}
+                </ButtonUI>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {memberModal && (
+        <MemberModal
+          memberShow={showData}
+          memberModal={memberModal}
+          setMemberModal={setMemberModal}
+          setRefreshData={setRefreshData}
+        />
+      )}
+    </TableContainer>
+  );
+};
+
+const ImagePreview = (src) => {
+  const [preview, setPreview] = useState(src);
+
+  const onErrorHandler = () => {
+    setPreview("/images/no-image.png");
+  };
+
+  return (
+    <img
+      src={preview}
+      style={{ height: "100%" }}
+      alt="green iguana"
+      object-fit={"cover"}
+      onError={onErrorHandler}
+    />
+  );
+};
+
+export default MembersCard;
