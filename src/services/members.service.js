@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-export const svGetMembers = () => {
-    return axios.get(`member`).then(
+export const svGetMembers = (search) => {
+    return axios.get(`member?search=${search}`).then(
     (res) => { return { status: true, data: res.data.data }},
     (error) => { return { status: false, description: (!error.response.data)?"Something went wrong":error.response.data.description }}
     )

@@ -11,8 +11,12 @@ import "./members.scss";
 import MembersTab from "./members-tab";
 import { svGetMembers } from "../../services/members.service";
 import { appActions } from "../../store/app-slice";
+import { FormControl, Input, InputLabel } from "@mui/material";
+import { useSearchParams } from "react-router-dom";
 
 const Members = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [textSearch, setTextSearch] = useState(searchParams.get('search' || ""));
   const dispatch = useDispatch();
   const { t } = useTranslation("members-page");
   const language = useSelector((state) => state.app.language);
@@ -22,10 +26,10 @@ const Members = () => {
 
   useEffect(() => {
     dispatch(appActions.isSpawnActive(true));
-    svGetMembers().then((res) => {
+    svGetMembers(textSearch).then((res) => {
       if (res.status) {
+        console.log(res.data)
         const members_data = res.data?.map((d) => {
-          console.log(d)
           return {
             id: d.id,
             apple_id: d.apple_id,
@@ -38,7 +42,11 @@ const Members = () => {
             member_note: d.member_note,
             member_status: d.member_status,
             member_verify_at: d.member_verify_at,
-            profile_image: d.profile_image
+            profile_image: d.profile_image,
+            password: d.member_note,
+            email: d.email,
+            profile_image: d.profile_image,
+            phone_number: d.phone_number,
           };
         });
         setMembersData(members_data);
@@ -48,6 +56,12 @@ const Members = () => {
       dispatch(appActions.isSpawnActive(false));
     });
   }, [refreshData, language, tabSelect]);
+
+  const onChangeTextSearchHandler = (e) => {
+    setTextSearch(e.target.value)
+    setSearchParams(`search=${e.target.value}`)
+    setRefreshData(refreshData + 1)
+  }
 
   return (
     <section id="members-page">
@@ -69,6 +83,10 @@ const Members = () => {
                 {t("Fetch")}
               </ButtonUI>
             </h2>
+            <FormControl variant="standard">
+              <InputLabel htmlFor={`text-search`}>Search Name</InputLabel>
+              <Input size="small" id={`text-search`} value={textSearch || ""} onChange={onChangeTextSearchHandler} />
+            </FormControl>
           </div>
         </div>
 

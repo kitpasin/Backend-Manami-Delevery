@@ -37,6 +37,12 @@
       .btn-add-members {
         @apply ml-auto order-2 md:order-2;
       }
+
+      .MuiFormControl-root {
+        @apply w-full md:w-auto ml-auto;
+        min-width: 200px;
+        height: 100%;
+      }
     }
   }
 

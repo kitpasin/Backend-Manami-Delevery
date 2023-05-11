@@ -9,8 +9,9 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 import { t } from "i18next";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
@@ -19,7 +20,7 @@ import ButtonUI from "../../components/ui/button/button";
 import DateMoment from "../../components/ui/date-moment/date-moment";
 import {
   svDeleteMember,
-  svGetMembersById
+  svGetMembersById,
 } from "../../services/members.service";
 import SwalUI from "../../components/ui/swal-ui/swal-ui";
 import MemberModal from "./modal/member-modal";
@@ -31,7 +32,6 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
 
   const editHandler = (_id) => {
     svGetMembersById(_id).then((res) => {
-      console.log(res)
       const result = {
         id: res.data.id,
         firstname: res.data.title || "",
@@ -39,7 +39,7 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
         member_name: res.data.member_name || "",
         member_status: res.data.member_status,
         profile_image: res.data.profile_image || "",
-        created_at: res.data.created_at
+        created_at: res.data.created_at,
       };
       setShowData(result);
       setMemberModal(true);
@@ -55,7 +55,7 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
         confirmButtonText: "Yes, delete it",
         confirmButtonColor: "#e11d48",
         showCancelButton: true,
-        cancelButtonText: "Cancel"
+        cancelButtonText: "Cancel",
       })
       .then((result) => {
         if (result.isConfirmed) {
@@ -76,7 +76,10 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell align="left">Profile Image</TableCell>
-            <TableCell align="left">Name</TableCell>
+            <TableCell align="center">Name</TableCell>
+            <TableCell align="center">Email</TableCell>
+            <TableCell align="center">Password</TableCell>
+            <TableCell align="center">Phone Number</TableCell>
             <TableCell align="center">Verify Time</TableCell>
             <TableCell align="center">Status</TableCell>
             <TableCell align="center">Action</TableCell>
@@ -93,12 +96,13 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
               </TableCell>
               <TableCell align="left">
                 <Card sx={{ maxWidth: 100, height: 100 }}>
-                  <ImagePreview src={item.profile_image} />
+                  <ImagePreview src={row.profile_image} />
                 </Card>
               </TableCell>
-              <TableCell align="left">
-                {row.member_name}
-              </TableCell>
+              <TableCell align="center">{row.member_name}</TableCell>
+              <TableCell align="center">{row.email}</TableCell>
+              <TableCell align="center">{row.member_note}</TableCell>
+              <TableCell align="center">{row.phone_number}</TableCell>
               <TableCell align="center">
                 <DateMoment format={"LLL"} date={row.member_verify_at} />
               </TableCell>
@@ -150,17 +154,18 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
   );
 };
 
-const ImagePreview = (src) => {
-  const [preview, setPreview] = useState(src);
+const ImagePreview = ({ src }) => {
+  const uploadPath = useSelector((state) => state.app.uploadPath);
+  const [preview, setPreview] = useState(uploadPath + src);
 
   const onErrorHandler = () => {
     setPreview("/images/no-image.png");
   };
-
+  console.log(preview);
   return (
     <img
       src={preview}
-      style={{ height: "100%" }}
+      style={{ height: "100%", width: "100%" }}
       alt="green iguana"
       object-fit={"cover"}
       onError={onErrorHandler}
