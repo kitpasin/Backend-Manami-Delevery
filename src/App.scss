@@ -158,6 +158,7 @@ body {
     width: 100%;
     height: 100vh;
     background-image: var(--bgimage);
+    background-position: bottom !important;
     background-repeat: no-repeat;
     background-size: cover;
     border-top-right-radius: 40px;
@@ -168,7 +169,7 @@ body {
       background-position: bottom;
     }
     @media screen and (min-width: $xxl) {
-      background-position: left;
+      background-position: bottom;
     }
   }
   .guest-logo {
@@ -194,6 +195,7 @@ body {
     }
   }
   .guest-btn {
+    @apply 2xl:hidden;
     position: absolute;
     right: 0;
     z-index: 20;

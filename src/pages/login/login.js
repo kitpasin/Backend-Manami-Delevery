@@ -91,10 +91,10 @@ const LoginPage = () => {
   return (
     <form  id="login-page" className="guest-form"> 
     <figure className="fig-logo">
-      <img src="https://berdedd.com/backend/images/Logo-Wynnsoft-Management.png" className="logo" />
+      <img src="https://manami-delivery.com/img/home/mainlogogroup.png" className="logo" />
     </figure>
     <h1 className="login-title">Login To Your Account</h1>
-    <p className="login-desc">Welcome Back To Wynnsoft Solution Manager</p>
+    <p className="login-desc">Welcome Back To Manami-delivery Manager</p>
     <div className="input-group">
       <figure className="login-icon">
         <img src="/images/svg/user.svg" />
@@ -134,7 +134,7 @@ const LoginPage = () => {
         </button> */}
       </div>
     </div>
-    <div className="powerby"> COPY RIGHT @2022 WYNNSOFT SOLUTION CO,LTD</div>
+    <div className="powerby"> COPY RIGHT @2023 MANAMI DELIVERY CO,LTD</div>
   </form>
    
   )

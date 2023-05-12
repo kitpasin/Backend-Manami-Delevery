@@ -72,12 +72,12 @@ const SidebarComponent = (props) => {
         <Link className="sidenav-header" to="/">
           <figure className="figure-image">
             <img
-              src="https://berdedd.com/backend/images/Logo-Wynnsoft-Management.png"
+              src="https://manami-delivery.com/img/home/mainlogogroup.png"
               className="website-logo"
             />
           </figure>
           <div className="website-powerby">
-            <p>Wynnsoft Solution</p>
+            <p>Manami Delivery</p>
             <p className="sub-website">{t("Managements")}</p>
           </div>
         </Link>
