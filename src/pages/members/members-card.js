@@ -29,6 +29,7 @@ const modalSwal = withReactContent(Swal);
 
 const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
   const [showData, setShowData] = useState({});
+  const uploadPath = useSelector((state) => state.app.uploadPath);
 
   const editHandler = (_id) => {
     svGetMembersById(_id).then((res) => {
@@ -86,7 +87,7 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {item.map((row, index) => (
+          {item?.map((row, index) => (
             <TableRow
               key={index}
               sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -96,7 +97,17 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
               </TableCell>
               <TableCell align="left">
                 <Card sx={{ maxWidth: 100, height: 100 }}>
-                  <ImagePreview src={row.profile_image} />
+                  <img
+                    src={
+                      row.profile_image
+                        ? uploadPath + row.profile_image
+                        : "/images/no-image.png"
+                    }
+                    alt="green iguana"
+                    style={{ height: "100%", width: "100%" }}
+                    object-fit={"cover"}
+                  />
+                  {/* <ImagePreview src={row.profile_image} /> */}
                 </Card>
               </TableCell>
               <TableCell align="center">{row.member_name}</TableCell>
@@ -161,7 +172,6 @@ const ImagePreview = ({ src }) => {
   const onErrorHandler = () => {
     setPreview("/images/no-image.png");
   };
-  console.log(preview);
   return (
     <img
       src={preview}
