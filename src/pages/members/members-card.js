@@ -104,7 +104,7 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
                         : "/images/no-image.png"
                     }
                     alt="green iguana"
-                    style={{ height: "100%", width: "100%" }}
+                    style={{ height: "100%", width: "100%", minWidth: "80px"}}
                     object-fit={"cover"}
                   />
                   {/* <ImagePreview src={row.profile_image} /> */}

@@ -28,7 +28,6 @@ const Members = () => {
     dispatch(appActions.isSpawnActive(true));
     svGetMembers(textSearch).then((res) => {
       if (res.status) {
-        console.log(res.data)
         const members_data = res.data?.map((d) => {
           return {
             id: d.id,

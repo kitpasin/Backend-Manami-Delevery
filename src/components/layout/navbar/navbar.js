@@ -19,7 +19,6 @@ const NavbarComponent = (props) => {
   const OnSignOutHandler = () => {
     dispatch(authActions.logout());
   }
-  console.log(profileImage)
   return (
     <nav className='navbar'>
         <div className='nav-body'> 
