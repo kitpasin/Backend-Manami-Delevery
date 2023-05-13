@@ -714,7 +714,7 @@ const OrdersModal = ({
                       </div>
                     </div>
                     <div className={isWashing ? "box-rows" : "box-rows foods"}>
-                      {isWashing && (
+                      {true && (
                         <div
                           className="column-image"
                           style={{
