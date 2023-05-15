@@ -1,4 +1,8 @@
-import { faRedo, faSearch, faTruckFast } from "@fortawesome/free-solid-svg-icons";
+import {
+  faRedo,
+  faSearch,
+  faTruckFast,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { FormControl, InputLabel, Input } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -10,7 +14,7 @@ import { svGetOrders, svGetOrderPending } from "../../services/orders.service";
 import { appActions } from "../../store/app-slice";
 import OrdersTab from "./orders-tab";
 import "./orders.scss";
-import { useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom";
 
 const Orders = () => {
   const dispatch = useDispatch();
@@ -21,7 +25,9 @@ const Orders = () => {
   const [refreshData, setRefreshData] = useState(0);
   const [ordersData, setOrdersData] = useState([]);
   const [ordersModal, setOrdersModal] = useState(false);
-  const [textSearch, setTextSearch] = useState(searchParams.get("search") || "")
+  const [textSearch, setTextSearch] = useState(
+    searchParams.get("search") || ""
+  );
 
   useEffect(() => {
     dispatch(appActions.isSpawnActive(true));
@@ -51,7 +57,7 @@ const Orders = () => {
             delivery_drop: d.delivery_drop,
             status_id: d.status_id,
             id: d.id,
-            total_price: d.total_price
+            total_price: d.total_price,
           };
         });
         setOrdersData(order_data);
@@ -61,16 +67,16 @@ const Orders = () => {
       dispatch(appActions.isSpawnActive(false));
     });
     svGetOrderPending().then((res) => {
-      dispatch(appActions.setNewOrders(res.data.data))
-    })
+      dispatch(appActions.setNewOrders(res.data.data));
+    });
   }, [refreshData, language, tabSelect]);
 
   const OnChangeTextSearchHandler = (e) => {
-    setTextSearch(e.target.value)
-    setSearchParams(`search=${e.target.value}`)
+    setTextSearch(e.target.value);
+    setSearchParams(`search=${e.target.value}`);
     // navigate({pathname: '/orders',search: '?search=' + e.target.value })
-    setRefreshData(refreshData + 1)
-  }
+    setRefreshData(refreshData + 1);
+  };
 
   return (
     <section id="orders-page">

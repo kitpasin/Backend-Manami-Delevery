@@ -1,4 +1,4 @@
-import { faEye, faRandom, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faRandom, faTrash, faUserPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Card,
@@ -12,7 +12,8 @@ import {
   TableRow,
 } from "@mui/material";
 import { useSelector } from "react-redux";
-import { t } from "i18next";
+// import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -30,6 +31,7 @@ const modalSwal = withReactContent(Swal);
 const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
   const [showData, setShowData] = useState({});
   const uploadPath = useSelector((state) => state.app.uploadPath);
+  const { t } = useTranslation("member-page");
 
   const editHandler = (_id) => {
     svGetMembersById(_id).then((res) => {
@@ -41,6 +43,9 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
         member_status: res.data.member_status,
         profile_image: res.data.profile_image || "",
         created_at: res.data.created_at,
+        password: res.data.member_note,
+        phone_number: res.data.phone_number,
+        email: res.data.email,
       };
       setShowData(result);
       setMemberModal(true);
@@ -136,9 +141,9 @@ const MembersCard = ({ item, setMemberModal, setRefreshData, memberModal }) => {
                   on="show"
                   className="btn-custom onShow"
                   width="md"
-                  icon={<FontAwesomeIcon icon={faRandom} />}
+                  icon={<FontAwesomeIcon icon={faUserPen} />}
                 >
-                  {t("Change")}
+                  {t("Edit")}
                 </ButtonUI>
                 <ButtonUI
                   onClick={(e) => deleteHandler(row.id)}

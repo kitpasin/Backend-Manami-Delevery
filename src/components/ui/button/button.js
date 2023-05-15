@@ -30,7 +30,7 @@ const ButtonUI = (props) => {
   const [buttonIcon, setButtonIcon] = useState(props.icon);
   const [btnSize, setButtonSize] = useState(props.size);
   const [btnWith, setButtonWidth] = useState(props.width);
-
+  
   useEffect(() => { 
   
     if(buttonLang !== languageSelected) {

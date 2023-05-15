@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 const modalSwal = withReactContent(Swal);
 
-const SwalUI = ({status = false , description = null}) => {
+const SwalUI = ({status = false , description = null, showConf = false, timer = null}) => {
     if(status) {
       modalSwal.fire({
         background: '#fff',
@@ -11,8 +11,8 @@ const SwalUI = ({status = false , description = null}) => {
         icon: "success",
         title: "Successful",
         text: description,
-        showConfirmButton: false,
-        timer: 1500,
+        showConfirmButton: showConf,
+        timer: timer ? timer : 1500,
       })
     } else {
       modalSwal.fire({
@@ -22,8 +22,8 @@ const SwalUI = ({status = false , description = null}) => {
         icon: "error",
         title: "Failed",
         text: description,
-        showConfirmButton: false,
-        timer: 1500,
+        showConfirmButton: showConf,
+        timer: timer ? timer : 1500,
       })
     }
 }
