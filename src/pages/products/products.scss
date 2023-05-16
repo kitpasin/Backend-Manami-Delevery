@@ -1,5 +1,15 @@
 @import "../../variables";
 
+.searchNcat {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.category {
+  width: 100%;
+}
+
 #search {
   background: #f3f4f6;
   margin: .75rem;
@@ -9,12 +19,6 @@
   border-radius: 5px;
   outline: none;
 }
-
-// .searchbox{
-//   width: 100%;
-//   display: flex;
-//   justify-content: flex-end;
-// }
 
 #products-page {
   .card-head {

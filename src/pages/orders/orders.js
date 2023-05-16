@@ -117,49 +117,49 @@ console.log(count);
   };
 
   return (
-    <section id="orders-page">
-      <div>
-        <audio ref={audioPlayer} src={NotificationSound} loop/>
-      </div>
-      <HeadPageComponent
-        h1={"OrdersPage"}
-        icon={<FontAwesomeIcon icon={faTruckFast} />}
-        breadcrums={[{ title: "OrdersPage", link: false }]}
-      />
-      <div className="card-control fixed-width">
-        <div className="card-head">
-          <div className="head-action">
-            <ButtonUI
-              onClick={() => setRefreshData(refreshData + 1)}
-              on="create"
-              isLoading={false}
-              icon={<FontAwesomeIcon icon={faRedo} />}
-            >
-              {t("Fetch")}
-            </ButtonUI>
-            <FormControl variant="standard">
-              <InputLabel htmlFor={`text-search`}>{t("orderNumberSearch")}</InputLabel>
-              <Input
-                size="small"
-                id={`text-search`}
-                value={textSearch}
-                onChange={(e) => OnChangeTextSearchHandler(e)}
-              />
-            </FormControl>
-          </div>
+      <section id="orders-page">
+        <div>
+          <audio ref={audioPlayer} src={NotificationSound} loop />
         </div>
-
-        <OrdersTab
-          ordersModal={ordersModal}
-          setOrdersModal={setOrdersModal}
-          ordersData={ordersData}
-          setRefreshData={setRefreshData}
-          refreshData={refreshData}
-          tabSelect={tabSelect}
-          setTabSelect={setTabSelect}
+        <HeadPageComponent
+          h1={"OrdersPage"}
+          icon={<FontAwesomeIcon icon={faTruckFast} />}
+          breadcrums={[{ title: "OrdersPage", link: false }]}
         />
-      </div>
-    </section>
+        <div className="card-control fixed-width">
+          <div className="card-head">
+            <div className="head-action">
+              <ButtonUI
+                onClick={() => setRefreshData(refreshData + 1)}
+                on="create"
+                isLoading={false}
+                icon={<FontAwesomeIcon icon={faRedo} />}
+              >
+                {t("Fetch")}
+              </ButtonUI>
+              <FormControl variant="standard">
+                <InputLabel htmlFor={`text-search`}>{t("orderNumberSearch")}</InputLabel>
+                <Input
+                  size="small"
+                  id={`text-search`}
+                  value={textSearch}
+                  onChange={(e) => OnChangeTextSearchHandler(e)}
+                />
+              </FormControl>
+            </div>
+          </div>
+
+          <OrdersTab
+            ordersModal={ordersModal}
+            setOrdersModal={setOrdersModal}
+            ordersData={ordersData}
+            setRefreshData={setRefreshData}
+            refreshData={refreshData}
+            tabSelect={tabSelect}
+            setTabSelect={setTabSelect}
+          />
+        </div>
+      </section>
   );
 };
 

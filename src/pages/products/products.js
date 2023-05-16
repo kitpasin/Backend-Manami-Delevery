@@ -34,6 +34,7 @@ const Products = () => {
             image: d.thumbnail_link,
             imageTitle: d.thumbnail_title,
             imageAlt: d.thumbnail_alt,
+            cate_id: d.cate_id,
             // slug: d.slug,
             title: d.title,
             description: d.description,
