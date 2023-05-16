@@ -24,6 +24,9 @@ import { appActions } from "../../../store/app-slice";
 import ProductModalAdd from "../product-action/product-add-modal";
 import ProductModalEdit from "../product-action/product-edit-modal";
 import SwalUI from "../../../components/ui/swal-ui/swal-ui";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import { useTranslation } from "react-i18next";
 
 const ProductsTab = ({
   productModalAdd,
@@ -43,6 +46,7 @@ const ProductsTab = ({
     isEdit: true,
     isOpen: false,
   });
+  const { t } = useTranslation("product-page");
   const language = useSelector((state) => state.app.language);
   const modalSwal = withReactContent(Swal);
 
@@ -86,6 +90,8 @@ const ProductsTab = ({
     setLimited({ begin: 0, end: rowsPerPage });
     setPage(0);
   };
+
+  // console.log(tabSelect)
 
   const addHandler = (item) => {
     dispatch(appActions.setEditData(item));
@@ -168,8 +174,8 @@ const ProductsTab = ({
     setPage(0);
   };
 
-  // Search
-  const [searchQuery, setSearchQuery] = useState("");
+  // Select Product Category
+  const [selectedCategoryId, setSelectedCategoryId] = useState("");
 
   useEffect(() => {
     getProductCategory(language).then((res) => {
@@ -181,10 +187,15 @@ const ProductsTab = ({
 
     const result = slideData?.filter((d) => {
       if (tabSelect !== "hidden") {
-        return d.title.toLowerCase().includes(searchQuery.toLowerCase());
+        return (
+          (selectedCategoryId === "" || d.cate_id === selectedCategoryId) // Check if the selected category ID matches
+        );
       } else {
         if (d.display === false) {
-          return d.title.toLowerCase().includes(searchQuery.toLowerCase());
+          return (
+
+            (selectedCategoryId === "" || d.cate_id === selectedCategoryId) // Check if the selected category ID matches
+          );
         }
       }
     });
@@ -192,7 +203,16 @@ const ProductsTab = ({
       setTotalData(result.length);
       setFilteredData(result.slice(limited.begin, limited.end));
     }
-  }, [tabSelect, slideData, page, rowsPerPage, searchQuery]);
+  }, [tabSelect, slideData, page, rowsPerPage, selectedCategoryId]);
+
+   const handleChangeSelect = (event) => {
+     const selectedId = event.target.value;
+     const result = slideData.filter((item) => item.id === selectedId);
+     setFilteredData(result);
+     setSelectedCategoryId(selectedId); // Update the selected category ID state
+   };
+
+
 
   return (
     <Fragment>
@@ -215,14 +235,61 @@ const ProductsTab = ({
                 />
               ))}
             </TabList>
-            <div className="searchbox">
-              <input
-                id="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                type="text"
-                placeholder="Search here... "
-              />
+            <div className="category">
+              <Select
+                value={selectedCategoryId}
+                onChange={handleChangeSelect}
+                style={{ width: "150px", height: "35px", margin: "1rem" }}
+                displayEmpty
+              >
+                <MenuItem value="">
+                  {t("ModalSlcCategory")}
+                </MenuItem>
+                {productCate?.map((p) => {
+                  // Check if tabSelect and p.id
+                  if (tabSelect === "") {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  }
+                  else if (tabSelect === "9" && [1, 2].includes(p.id)) {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  } 
+                  else if (
+                    (tabSelect === "10" && [3, 4].includes(p.id)) ||
+                    (tabSelect === "11" && [3].includes(p.id))
+                  ) {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  }
+                  else if (tabSelect === "15" && [13, 14, 15, 16, 17, 18, 19].includes(p.id)) {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  } 
+                  else if (tabSelect === "hidden") {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  }
+                  
+                  // Render all other items
+                  return null;
+                })}
+              </Select>
             </div>
           </Box>
           {tabLists.map((tab) => (

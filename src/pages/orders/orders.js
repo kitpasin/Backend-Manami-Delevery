@@ -68,7 +68,7 @@ const Orders = () => {
     });
     svGetOrderPending().then((res) => {
       dispatch(appActions.setNewOrders(res.data.data));
-      dispatch(appActions.setFollowNewOrders(res.data.data))
+      dispatch(appActions.setFollowNewOrders(res.data.data));
     });
   };
 
