@@ -77,34 +77,35 @@ const Orders = ({
     });
     svGetOrderPending().then((res) => {
       dispatch(appActions.setNewOrders(res.data.data));
+      dispatch(appActions.setFollowNewOrders(res.data.data))
     });
   };
 
-  useEffect(() => {
-    if (
-      orderLength !== ordersData.length &&
-      orderLength < ordersData.length &&
-      orderLength != 0
-    ) {
-      audioPlayer.current.play();
-      Swal.fire({
-        title: "You have an order!",
-        icon: "warning",
-        showCancelButton: false,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Ok",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          audioPlayer.current.pause();
-        }
-      });
-      setOrderLength(ordersData.length);
-      // return;
-    }
-    const interval = setInterval(() => onFetchOrderData(), 5000);
-    return () => clearInterval(interval);
-  }, [orderLength, ordersData]);
+  // useEffect(() => {
+  //   if (
+  //     orderLength !== ordersData.length &&
+  //     orderLength < ordersData.length &&
+  //     orderLength != 0
+  //   ) {
+  //     audioPlayer.current.play();
+  //     Swal.fire({
+  //       title: "You have an order!",
+  //       icon: "warning",
+  //       showCancelButton: false,
+  //       confirmButtonColor: "#3085d6",
+  //       cancelButtonColor: "#d33",
+  //       confirmButtonText: "Ok",
+  //     }).then((result) => {
+  //       if (result.isConfirmed) {
+  //         audioPlayer.current.pause();
+  //       }
+  //     });
+  //     setOrderLength(ordersData.length);
+  //     // return;
+  //   }
+  //   const interval = setInterval(() => onFetchOrderData(), 5000);
+  //   return () => clearInterval(interval);
+  // }, [orderLength, ordersData]);
 
   useEffect(() => {
     dispatch(appActions.isSpawnActive(true));
