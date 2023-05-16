@@ -69,8 +69,6 @@ const OrdersModal = ({
   ];
 
   const images = orderShow.upload_images?.split(",");
-  console.log(images);
-
   const dispatch = useDispatch();
   const uploadPath = useSelector((state) => state.app.uploadPath);
   const modalSwal = withReactContent(Swal);

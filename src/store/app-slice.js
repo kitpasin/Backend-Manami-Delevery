@@ -22,6 +22,7 @@ const initialAppState = {
     pages: appConfig.pages,
     features: appConfig.features,
     newOrders: 0,
+    followNewOrders: 0,
     frontOffice: {
         pageAvailable: []
     }
@@ -39,6 +40,9 @@ const appSlice = createSlice({
         },
         setNewOrders(state, action) {
             state.newOrders = action.payload
+        },
+        setFollowNewOrders(state, action) {
+            state.followNewOrders = action.payload
         },
         setEditData(state, action) {
             state.editData = action.payload

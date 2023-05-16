@@ -212,10 +212,7 @@ const ProductsTab = ({
      setSelectedCategoryId(selectedId); // Update the selected category ID state
    };
 
-  //  const [tabNow, setTabNow] = useState(tabSelect)
-  //  if (tabNow !== tabSelect) {
-  //     MenuItem.value = ""
-  //  }
+
 
   return (
     <Fragment>
@@ -245,14 +242,53 @@ const ProductsTab = ({
                 style={{ width: "150px", height: "35px", margin: "1rem" }}
                 displayEmpty
               >
-                <MenuItem value="" disabled>
+                <MenuItem value="">
                   {t("ModalSlcCategory")}
                 </MenuItem>
-                {productCate?.map((p) => (
-                  <MenuItem key={p.id} value={p.id}>
-                    {p.title}
-                  </MenuItem>
-                ))}
+                {productCate?.map((p) => {
+                  // Check if tabSelect and p.id
+                  if (tabSelect === "") {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  }
+                  else if (tabSelect === "9" && [1, 2].includes(p.id)) {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  } 
+                  else if (
+                    (tabSelect === "10" && [3, 4].includes(p.id)) ||
+                    (tabSelect === "11" && [3].includes(p.id))
+                  ) {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  }
+                  else if (tabSelect === "15" && [13, 14, 15, 16, 17, 18, 19].includes(p.id)) {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  } 
+                  else if (tabSelect === "hidden") {
+                    return (
+                      <MenuItem key={p.id} value={p.id}>
+                        {p.title}
+                      </MenuItem>
+                    );
+                  }
+                  
+                  // Render all other items
+                  return null;
+                })}
               </Select>
             </div>
           </Box>
