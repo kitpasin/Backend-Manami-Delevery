@@ -109,6 +109,7 @@ const OrdersTab = ({
           telegram: d.telegram,
           upload_images: d.upload_images,
           distance: d.distance,
+          currency_symbol: d.currency,
         };
         setOrderShow(result);
         setOrdersModal(true);

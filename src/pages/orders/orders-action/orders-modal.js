@@ -606,7 +606,7 @@ const OrdersModal = ({
                           <strong>Total Price (including shipping fee)</strong>
                         </p>
                         <label htmlFor="">
-                          {orderShow.totalPrice + orderShow.delivery_price} $
+                          {orderShow.totalPrice + orderShow.delivery_price} {orderShow.currency_symbol}
                         </label>
                       </div>
                       <div className="column-top">
@@ -614,7 +614,7 @@ const OrdersModal = ({
                           <strong>Delivery Price</strong>
                         </p>
                         <label htmlFor="">
-                          {orderShow.delivery_price || 0} $
+                          {orderShow.delivery_price || 0 } {orderShow.currency_symbol} 
                         </label>
                       </div>
                     </div>
