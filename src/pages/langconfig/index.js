@@ -91,6 +91,7 @@ const LangConfigPage = () => {
   };
 
   const OnSearchChangeHandler = (search, page) => {
+    console.log(langConfigList)
     const checkValue = new RegExp(search, "gi");
     const checkPage = page;
     const filteredSearch = langConfigList.filter((data) => {
