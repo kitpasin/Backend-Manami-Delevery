@@ -25,10 +25,9 @@ const OrdersCard = ({ items, editHandler, deleteHandler }) => {
               <TableCell align="left">Order Number</TableCell>
               <TableCell align="left">Customer Name</TableCell>
               <TableCell align="left">Branch</TableCell>
-              <TableCell align="center">Type Order</TableCell>
-              <TableCell align="center">Status</TableCell>
+              <TableCell align="left">Type Order</TableCell>
+              <TableCell align="left">Status</TableCell>
               <TableCell align="left">Transaction Date</TableCell>
-              <TableCell align="center">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

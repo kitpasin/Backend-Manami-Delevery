@@ -43,11 +43,11 @@ const MainLayout = (props) => {
         confirmButtonText: "Ok",
       }).then(() => {
         audioPlayer.current.pause();
-        if (!(window.location.pathname === "/orders")) {
-          window.location.href = "/orders"
-        } else {
-          return false;
-        }
+        // if (!(window.location.pathname === "/orders")) {
+        //   window.location.href = "/orders"
+        // } else {
+        //   return false;
+        // }
       });
     }
     dispatch(appActions.setFollowNewOrders(newOrders));

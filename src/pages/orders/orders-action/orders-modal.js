@@ -67,7 +67,6 @@ const OrdersModal = ({
       title: "Failed",
     },
   ];
-
   const images = orderShow.upload_images?.split(",");
   const dispatch = useDispatch();
   const uploadPath = useSelector((state) => state.app.uploadPath);

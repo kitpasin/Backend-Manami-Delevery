@@ -28,6 +28,7 @@ import ResetPasswordPage from './pages/resetpassword/resetpassword';
 import Products from './pages/products/products';
 import ProductCate from './pages/productCategory/product_cate';
 import Members from './pages/members/members';
+import Reports from './pages/reports/reports';
 import Orders from './pages/orders/orders';
 import Employee from './pages/employee/employee';
 
@@ -36,46 +37,51 @@ function App() {
   const isDevMode = useSelector((state) => state.app.isDevMode)
 
   return (
-
     <Suspense>
-        {/* Animetion loading */}
-        <BounceLoading />
-        <SpawnLoading />
-        <Routes>
-          <Route element={<PrivateRoutes />} >
-            {<Route path="/" element={<Navigate to="/dashboard" />} /> }
-            {pagesAllow.dashboard && <Route path="/dashboard" element={<DashboardPage />} /> }
-            {pagesAllow.inbox && <Route path="inbox" element={<InboxPage />} /> }
-            {/* {pagesAllow.messages && <Route path="messages" element={<DashboardPage />} /> } */}
-            {/* {pagesAllow.subscribe && <Route path="subscribe" element={<DashboardPage />} /> } */}
-            {pagesAllow.orders && <Route path="orders" element={<Orders />} /> }
-            {pagesAllow.productcate && <Route path="productcate" element={<ProductCate />} /> }
-            {pagesAllow.products && <Route path="products" element={<Products />} /> }
-            {pagesAllow.members && <Route path="members" element={<Members />} /> }
-            {pagesAllow.employee && <Route path="employee" element={<Employee />} /> }
-            {pagesAllow.slides && <Route path="slides" element={<SlidePage />} /> }
+      {/* Animetion loading */}
+      <BounceLoading />
+      <SpawnLoading />
+      <Routes>
+        <Route element={<PrivateRoutes />}>
+          {<Route path="/" element={<Navigate to="/dashboard" />} />}
+          {pagesAllow.dashboard && <Route path="/dashboard" element={<DashboardPage />} />}
+          {pagesAllow.inbox && <Route path="inbox" element={<InboxPage />} />}
+          {/* {pagesAllow.messages && <Route path="messages" element={<DashboardPage />} /> } */}
+          {/* {pagesAllow.subscribe && <Route path="subscribe" element={<DashboardPage />} /> } */}
+          {pagesAllow.orders && <Route path="orders" element={<Orders />} />}
+          {pagesAllow.productcate && <Route path="productcate" element={<ProductCate />} />}
+          {pagesAllow.products && <Route path="products" element={<Products />} />}
+          {pagesAllow.members && <Route path="members" element={<Members />} />}
+          
+          {/* Report */}
+          {pagesAllow.reports && <Route path="reports" element={<Reports />} />}
 
-            {pagesAllow.menu && <Route path="menu" element={<MenuPage />} /> }
-            {pagesAllow.category && <Route path="category" element={<CategoryPage />} /> }
-            {pagesAllow.posts && <Route path="posts" element={<PostPage />} /> }
-            {/* {pagesAllow.reports && <Route path="reports" element={<DashboardPage />} /> } */}
-            {pagesAllow.webinfo && <Route path="webinfo" element={<WebInfoPage />} /> }
-            {pagesAllow.languages && <Route path="languages" element={<LangConfigPage />} /> }
-            {pagesAllow.admins && <Route path="admins" element={<AdminPage />} /> }
-            {pagesAllow.configs && <Route path="configs" element={<ConfigPage />} />  }
-            {pagesAllow.profile && <Route path="profile" element={<ProfileAdminPage />} /> }
-            {isDevMode && <Route path="componentui" element={<ShowUIComponentPage />} /> }
-          </Route>
-          <Route element={<GuestRoutes />} >
-            <Route path="login"  element={<LoginPage />} />
-            <Route path="register"  element={<RegisterPage />} />
-            <Route path="forgetpassword"  element={<ForgetPasswordPage />} />
-            <Route path="resetpassword/:token"  element={<ResetPasswordPage />} />
-          </Route>
-          <Route path="*" element={<Navigate to="/dashboard" />} />
-        </Routes>
+          {pagesAllow.employee && <Route path="employee" element={<Employee />} />}
+          {pagesAllow.slides && <Route path="slides" element={<SlidePage />} />}
+
+          {pagesAllow.menu && <Route path="menu" element={<MenuPage />} />}
+          {pagesAllow.category && <Route path="category" element={<CategoryPage />} />}
+          {pagesAllow.posts && <Route path="posts" element={<PostPage />} />}
+
+          {/* {pagesAllow.reports && <Route path="reports" element={<DashboardPage />} /> } */}
+          
+          {pagesAllow.webinfo && <Route path="webinfo" element={<WebInfoPage />} />}
+          {pagesAllow.languages && <Route path="languages" element={<LangConfigPage />} />}
+          {pagesAllow.admins && <Route path="admins" element={<AdminPage />} />}
+          {pagesAllow.configs && <Route path="configs" element={<ConfigPage />} />}
+          {pagesAllow.profile && <Route path="profile" element={<ProfileAdminPage />} />}
+          {isDevMode && <Route path="componentui" element={<ShowUIComponentPage />} />}
+        </Route>
+        <Route element={<GuestRoutes />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+          <Route path="forgetpassword" element={<ForgetPasswordPage />} />
+          <Route path="resetpassword/:token" element={<ResetPasswordPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/dashboard" />} />
+      </Routes>
     </Suspense>
-  )
+  );
 }
 export default App;
 
