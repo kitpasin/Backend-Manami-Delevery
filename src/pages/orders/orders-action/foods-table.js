@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 const FoodsTable = ({ orderList }) => {
   const uploadPath = useSelector((state) => state.app.uploadPath);
 
+  // console.log(orderList)
+
   return (
     <Table
       sx={{ minWidth: 650 }}
