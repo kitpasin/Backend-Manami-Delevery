@@ -128,6 +128,17 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet 1");
 
+    // Add headers to the worksheet Summary
+    const headerRow2 = worksheet.addRow(["Summary Product Price", "Delivery Price", "Total Price"]);
+    headerRow2.font = { bold: true };
+
+    // Add data to the worksheet Summary
+    worksheet.addRow([
+      summaryValues.productPrice + " THB",
+      summaryValues.deliveryPrice + " THB",
+      summaryValues.totalPrice + " THB",
+    ]);
+
     // Add headers to the worksheet
     const headerRow = worksheet.addRow([
       "Order Number",
@@ -154,16 +165,6 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
         row.total_price + row.delivery_price + " THB",
       ]);
     });
-
-    // Add headers to the worksheet Summary
-    const headerRow2 = worksheet.addRow(["Summary Product Price", "Delivery Price", "Total Price"]);headerRow2.font = { bold: true };
-
-    // Add data to the worksheet Summary
-    worksheet.addRow([
-      summaryValues.productPrice + "THB",
-      summaryValues.deliveryPrice + "THB",
-      summaryValues.totalPrice + "THB",
-    ]);
 
     // Auto-fit columns
     worksheet.columns.forEach((column) => {
