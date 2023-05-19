@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./sidebar.scss";
 import {
   faCaretDown,
+  faFolderOpen,
   faListOl,
   faSignsPost,
   faSitemap,
@@ -286,7 +287,7 @@ const SidebarComponent = (props) => {
                     liClass="menu-link"
                   >
                     <figure className="faIcon">
-                      <FontAwesomeIcon icon={faBook} />
+                      <FontAwesomeIcon icon={faFolderOpen} />
                     </figure>
                     <div className="menu-title">{t("ReportsPage")}</div>
                   </NavLink>

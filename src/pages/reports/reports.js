@@ -71,12 +71,6 @@ const Reports = () => {
     onFetchOrderData();
   }, [refreshData, language, tabSelect]);
 
-   const onChangeTextSearchHandler = (e) => {
-     setTextSearch(e.target.value);
-     setSearchParams(`search=${e.target.value}`);
-     setRefreshData(refreshData + 1);
-   };
-
   return (
     <section id="reports-page">
       <HeadPageComponent
@@ -85,29 +79,6 @@ const Reports = () => {
         breadcrums={[{ title: "ReportsPage", link: false }]}
       />
       <div className="card-control fixed-width">
-        <div className="card-head">
-          <div
-            className="head-action"
-            style={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h2 className="head-title">
-              <ButtonUI
-                onClick={() => setRefreshData(refreshData + 1)}
-                on="create"
-                isLoading={false}
-                icon={<FontAwesomeIcon icon={faRedo} />}
-              >
-                {t("Fetch")}
-              </ButtonUI>
-            </h2>
-          </div>
-        </div>
-
         <ReportsTab
           reportsData={reportsData}
           refreshData={refreshData}

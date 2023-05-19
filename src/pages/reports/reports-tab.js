@@ -31,13 +31,10 @@ const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefr
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [limited, setLimited] = useState({ begin: 0, end: rowsPerPage });
   const [page, setPage] = useState(0);
-  const modalSwal = withReactContent(Swal);
 
   const [filteredData, setFilteredData] = useState(reportsData);
   const [totalData, setTotalData] = useState(0);
-  const [orderShow, setOrderShow] = useState({});
-  const [isWashing, setIsWashing] = useState(false);
-
+ 
   // Date Picker
   const [mode, setMode] = useState("date");
   const [dateValue, setDateValue] = useState(null);
@@ -59,63 +56,6 @@ const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefr
   };
   const handleEndDateChange = (date) => {
     setEndDate(date);
-  };
-  const renderDatePicker = () => {
-    switch (mode) {
-      case "date":
-        return (
-          <DatePicker
-            label="Select Date"
-            value={dateValue}
-            onChange={(newDateValue) => setDateValue(newDateValue)}
-            renderInput={(props) => <TextField {...props} />}
-          />
-        );
-      case "month":
-        return (
-          <DatePicker
-            label="Select Month"
-            value={monthValue}
-            onChange={(newMonthValue) => setMonthValue(newMonthValue)}
-            views={["year", "month"]}
-            openTo="month"
-            renderInput={(props) => <TextField {...props} />}
-          />
-        );
-      case "year":
-        return (
-          <DatePicker
-            label="Select Year"
-            value={yearValue}
-            onChange={(newYearValue) => setYearValue(newYearValue)}
-            views={["year"]}
-            openTo="year"
-            renderInput={(props) => <TextField {...props} />}
-          />
-        );
-      case "range":
-        return (
-          <div
-            style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}
-          >
-            <DatePicker
-              label="Select Start Date"
-              value={startDate}
-              onChange={handleStartDateChange}
-              renderInput={(params) => <TextField {...params} />}
-            />
-            <b style={{ fontWeight: "500" }}>to</b>
-            <DatePicker
-              label="Select End Date"
-              value={endDate}
-              onChange={handleEndDateChange}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </div>
-        );
-      default:
-        return null;
-    }
   };
 
   const tabLists = [
@@ -198,17 +138,122 @@ const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefr
               flexDirection: "column",
               justifyContent: "flex-start",
               alignItems: "flex-start",
-              gap: "1rem",
+              gap: "24px",
             }}
           >
-            <RadioGroup name="mode" value={mode} onChange={handleModeChange} row>
-              <FormControlLabel value="date" control={<Radio />} label="Date" />
-              <FormControlLabel value="month" control={<Radio />} label="Month" />
-              <FormControlLabel value="year" control={<Radio />} label="Year" />
-              <FormControlLabel value="range" control={<Radio />} label="Range" />
-            </RadioGroup>
             <LocalizationProvider dateAdapter={(AdapterDayjs, AdapterDateFns)}>
-              <Box>{renderDatePicker()}</Box>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  gap: "2rem",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    gap: "1rem",
+                  }}
+                >
+                  <RadioGroup name="mode" value={mode} onChange={handleModeChange} row>
+                    <FormControlLabel value="date" control={<Radio />} label="Date" />
+                  </RadioGroup>
+                  <DatePicker
+                    label="Select Date"
+                    value={dateValue}
+                    onChange={(newDateValue) => setDateValue(newDateValue)}
+                    renderInput={(props) => (
+                      <TextField {...props} style={{ width: "100%" }} size="small" />
+                    )}
+                    disabled={mode !== "date"}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    gap: "1rem",
+                  }}
+                >
+                  <RadioGroup name="mode" value={mode} onChange={handleModeChange} row>
+                    <FormControlLabel value="month" control={<Radio />} label="Month" />
+                  </RadioGroup>
+                  <DatePicker
+                    label="Select Month"
+                    value={monthValue}
+                    onChange={(newMonthValue) => setMonthValue(newMonthValue)}
+                    views={["year", "month"]}
+                    openTo="month"
+                    renderInput={(props) => (
+                      <TextField {...props} style={{ width: "100%" }} size="small" />
+                    )}
+                    disabled={mode !== "month"}
+                  />
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    gap: "1rem",
+                  }}
+                >
+                  <RadioGroup name="mode" value={mode} onChange={handleModeChange} row>
+                    <FormControlLabel value="year" control={<Radio />} label="Year" />
+                  </RadioGroup>
+                  <DatePicker
+                    label="Select Year"
+                    value={yearValue}
+                    onChange={(newYearValue) => setYearValue(newYearValue)}
+                    views={["year"]}
+                    openTo="year"
+                    renderInput={(props) => (
+                      <TextField {...props} style={{ width: "100%" }} size="small" />
+                    )}
+                    disabled={mode !== "year"}
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  width: "100%",
+                  gap: ".3rem",
+                }}
+              >
+                <RadioGroup name="mode" value={mode} onChange={handleModeChange} row>
+                  <FormControlLabel value="range" control={<Radio />} label="Range" />
+                </RadioGroup>
+                <DatePicker
+                  label="Select Start Date"
+                  value={startDate}
+                  onChange={handleStartDateChange}
+                  renderInput={(props) => (
+                    <TextField {...props} style={{ width: "100%" }} size="small" />
+                  )}
+                  disabled={mode !== "range"}
+                />
+                <b style={{ fontWeight: "500", marginInline: ".7rem" }}>to</b>
+                <DatePicker
+                  label="Select End Date"
+                  value={endDate}
+                  onChange={handleEndDateChange}
+                  renderInput={(props) => (
+                    <TextField {...props} style={{ width: "100%" }} size="small" />
+                  )}
+                  disabled={mode !== "range"}
+                />
+              </div>
             </LocalizationProvider>
           </Box>
 
