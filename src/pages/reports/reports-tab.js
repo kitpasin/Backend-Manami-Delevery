@@ -6,7 +6,15 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import { Box, Tab, TablePagination } from "@mui/material";
+import {
+  Box,
+  Tab,
+  TablePagination,
+  TextField,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+} from "@mui/material";
 import React, { Fragment, useEffect, useState } from "react";
 import ReportsCard from "./reports-card";
 import withReactContent from "sweetalert2-react-content";
@@ -14,14 +22,12 @@ import Swal from "sweetalert2";
 import SwalUI from "../../components/ui/swal-ui/swal-ui";
 import { svDeleteOrder, svGetOrderByOrderNumber } from "../../services/orders.service";
 import { t } from "i18next";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const ReportsTab = ({
-  tabSelect,
-  setTabSelect,
-  reportsData,
-  refreshData,
-  setRefreshData,
-}) => {
+const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefreshData }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [limited, setLimited] = useState({ begin: 0, end: rowsPerPage });
   const [page, setPage] = useState(0);
@@ -32,29 +38,87 @@ const ReportsTab = ({
   const [orderShow, setOrderShow] = useState({});
   const [isWashing, setIsWashing] = useState(false);
 
-  const tabLists = [
-    { value: "0", title: "All", icon: <FontAwesomeIcon icon={faFolderOpen} /> },
-    // {
-    //   value: "2",
-    //   title: "Pending",
-    //   icon: <FontAwesomeIcon icon={faStopwatch} />,
-    // },
-    // {
-    //   value: "3",
-    //   title: "Inprogress",
-    //   icon: <FontAwesomeIcon icon={faStopwatch} />,
-    // },
-    // {
-    //   value: "4",
-    //   title: "Complete",
-    //   icon: <FontAwesomeIcon icon={faCircleCheck} />,
-    // },
-    // {
-    //   value: "5",
-    //   title: "Failed",
-    //   icon: <FontAwesomeIcon icon={faCircleXmark} />,
-    // },
-  ];
+  // Date Picker
+  const [mode, setMode] = useState("date");
+  const [dateValue, setDateValue] = useState(null);
+  const [monthValue, setMonthValue] = useState(null);
+  const [yearValue, setYearValue] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const handleModeChange = (event) => {
+    setMode(event.target.value);
+    setDateValue(null);
+    setMonthValue(null);
+    setYearValue(null);
+    setStartDate(null);
+    setEndDate(null);
+  };
+  const handleStartDateChange = (date) => {
+    setStartDate(date);
+    setEndDate(null);
+  };
+  const handleEndDateChange = (date) => {
+    setEndDate(date);
+  };
+  const renderDatePicker = () => {
+    switch (mode) {
+      case "date":
+        return (
+          <DatePicker
+            label="Select Date"
+            value={dateValue}
+            onChange={(newDateValue) => setDateValue(newDateValue)}
+            renderInput={(props) => <TextField {...props} />}
+          />
+        );
+      case "month":
+        return (
+          <DatePicker
+            label="Select Month"
+            value={monthValue}
+            onChange={(newMonthValue) => setMonthValue(newMonthValue)}
+            views={["year", "month"]}
+            openTo="month"
+            renderInput={(props) => <TextField {...props} />}
+          />
+        );
+      case "year":
+        return (
+          <DatePicker
+            label="Select Year"
+            value={yearValue}
+            onChange={(newYearValue) => setYearValue(newYearValue)}
+            views={["year"]}
+            openTo="year"
+            renderInput={(props) => <TextField {...props} />}
+          />
+        );
+      case "range":
+        return (
+          <div
+            style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "1rem" }}
+          >
+            <DatePicker
+              label="Select Start Date"
+              value={startDate}
+              onChange={handleStartDateChange}
+              renderInput={(params) => <TextField {...params} />}
+            />
+            <b style={{ fontWeight: "500" }}>to</b>
+            <DatePicker
+              label="Select End Date"
+              value={endDate}
+              onChange={handleEndDateChange}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const tabLists = [{ value: "0", title: "All", icon: <FontAwesomeIcon icon={faFolderOpen} /> }];
 
   const handleChange = (event, newValue) => {
     setTabSelect(newValue);
@@ -116,11 +180,41 @@ const ReportsTab = ({
               ))}
             </TabList>
           </Box>
+          <Box
+            style={{
+              marginTop: "24px",
+              marginLeft: "24px",
+              marginRight: "24px",
+              marginBottom: "0",
+              width: "96.5%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              gap: "1rem",
+            }}
+          >
+            <RadioGroup name="mode" value={mode} onChange={handleModeChange} row>
+              <FormControlLabel value="date" control={<Radio />} label="Date" />
+              <FormControlLabel value="month" control={<Radio />} label="Month" />
+              <FormControlLabel value="year" control={<Radio />} label="Year" />
+              <FormControlLabel value="range" control={<Radio />} label="Range" />
+            </RadioGroup>
+            <LocalizationProvider dateAdapter={(AdapterDayjs, AdapterDateFns)}>
+              <Box>{renderDatePicker()}</Box>
+            </LocalizationProvider>
+          </Box>
+
           {tabLists.map((tab) => (
             <TabPanel className={`orders-tab-body asRow`} value={tab.value} key={tab.value}>
               <div className="item-list">
                 <ReportsCard
                   items={filteredData}
+                  dateValue={dateValue}
+                  monthValue={monthValue}
+                  yearValue={yearValue}
+                  startDate={startDate}
+                  endDate={endDate}
                 />
               </div>
               <TablePagination

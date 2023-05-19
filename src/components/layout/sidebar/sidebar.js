@@ -286,7 +286,7 @@ const SidebarComponent = (props) => {
                     liClass="menu-link"
                   >
                     <figure className="faIcon">
-                      <FontAwesomeIcon icon={faStreetView} />
+                      <FontAwesomeIcon icon={faBook} />
                     </figure>
                     <div className="menu-title">{t("ReportsPage")}</div>
                   </NavLink>
