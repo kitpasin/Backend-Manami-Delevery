@@ -53,7 +53,7 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
     formatStartDateValue = `${year}-${month}-${day}`;
 
     console.log(formatStartDateValue);
-  } else if ((startDate && endDate) || (!startDate && endDate)) {
+  } else if (startDate && endDate) {
     const year = endDate.getFullYear();
     const month = String(endDate.getMonth() + 1).padStart(2, "0");
     const day = String(endDate.getDate()).padStart(2, "0");
@@ -82,22 +82,30 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
     // Show Report Condition
     const filteredItems = items.filter((row) => {
       if (row.status_id === 4) {
-        // Format Date
-        let newFormatDate = row.transaction_date.split(" ")[0];
-        // Format Month
-        const [m_year, m_month] = row.transaction_date.split("-");
-        let newFormatMonth = `${m_year}-${m_month}`;
-        // Format Year
-        let newFormatYear = row.transaction_date.split("-")[0];
-        if (newFormatDate >= formatStartDateValue && newFormatDate <= formatEndDateValue) {
-          return true;
-        } else if (formatDateValue && newFormatDate === formatDateValue) {
-          return true;
-        } else if (formatMonthValue && newFormatMonth === formatMonthValue) {
-          return true;
-        } else if (formatYearValue && newFormatYear === formatYearValue) {
-          return true;
-        }
+        const transactionDate = new Date(row.transaction_date);
+
+         if (startDate && endDate) {
+           return (
+             transactionDate >= startDate &&
+             transactionDate <= new Date(endDate.getTime() + 86400000) // Milliseconds in a day
+           );
+         } else if (dateValue) {
+           const year = dateValue.getFullYear();
+           const month = dateValue.getMonth();
+           const day = dateValue.getDate();
+           return (
+             transactionDate.getFullYear() === year &&
+             transactionDate.getMonth() === month &&
+             transactionDate.getDate() === day
+           );
+         } else if (monthValue) {
+           const year = monthValue.getFullYear();
+           const month = monthValue.getMonth();
+           return transactionDate.getFullYear() === year && transactionDate.getMonth() === month;
+         } else if (yearValue) {
+           const year = yearValue.getFullYear();
+           return transactionDate.getFullYear() === year;
+         }
       }
       return false;
     });
@@ -115,14 +123,7 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
     });
 
     setFilteredItems(filteredItems);
-  }, [
-    items,
-    formatStartDateValue,
-    formatEndDateValue,
-    formatDateValue,
-    formatMonthValue,
-    formatYearValue,
-  ]);
+  }, [items, startDate, endDate, dateValue, monthValue, yearValue]);
 
   const exportToExcel = () => {
     const workbook = new ExcelJS.Workbook();
