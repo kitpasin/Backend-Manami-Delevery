@@ -8,52 +8,55 @@ import { TextField } from "@mui/material";
 
 import "./dashboard.scss";
 
-function DatePickerComponent({setYear, label}) {
-  const minDate = dayjs("2023-01-01");
-  const [yearValue, setYearValue] = useState(dayjs());
+function DatePickerComponent({
+  state,
+  setStartDate,
+  setEndDate,
+  label,
+  setDateDisable,
+  dateDisable,
+  minDate,
+  setMin,
+  maxDate,
+  setMax,
+}) {
+  const [value, setValue] = useState(dayjs());
 
-  useEffect(() => {
-    setYear(yearValue)
-  }, [yearValue])
+  const onChangeHanble = (value) => {
+    setDateDisable(false);
+    setValue(value);
+    if (state) {
+      setStartDate(value.toISOString().substring(0, 10))
+      setMin(dayjs(value).add(1, "day"));
+      setMax(dayjs(value).add(31, "day")); /*  */
+    } else {
+      setEndDate(value.toISOString().substring(0, 10));
+    }
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker
-        disableMaskedInput={true}
+        disabled={dateDisable}
         label={label}
         views={["year", "month", "day"]}
-        value={yearValue}
+        value={value}
         minDate={minDate}
+        maxDate={maxDate}
         inputFormat="YYYY-MM-DD"
-        onChange={(newValue) => setYearValue(newValue)}
+        onChange={onChangeHanble}
         renderInput={(props) => (
           <TextField
             size="small"
             {...props}
             sx={{
-              width: "150px",
-              //   "& .MuiOutlinedInput-root": {
-              //     "& fieldset": {
-              //       borderColor: "red",
-              //     },
-              //     "&:hover fieldset": {
-              //       borderColor: "green",
-              //     },
-              //     "&.Mui-focused fieldset": {
-              //       borderColor: "purple",
-              //     },
-              //   },
+              width: "160px",
             }}
-            inputProps={{...props.inputProps, readOnly: true}}
+            inputProps={{ ...props.inputProps, readOnly: true }}
           />
         )}
         size="small"
       />
-      {/* <DatePicker
-              label={'"month"'}
-              openTo="month"
-              views={["year", "month", "day"]}
-            /> */}
     </LocalizationProvider>
   );
 }
