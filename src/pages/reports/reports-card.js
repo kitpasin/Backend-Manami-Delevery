@@ -18,52 +18,6 @@ import ExcelJS from "exceljs";
 import saveAs from "file-saver";
 
 const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDate }) => {
-  let formatDateValue = "";
-  let formatMonthValue = "";
-  let formatYearValue = "";
-  let formatStartDateValue = "";
-  let formatEndDateValue = "";
-
-  if (dateValue) {
-    const year = dateValue.getFullYear();
-    const month = String(dateValue.getMonth() + 1).padStart(2, "0");
-    const day = String(dateValue.getDate()).padStart(2, "0");
-
-    formatDateValue = `${year}-${month}-${day}`;
-
-    console.log(formatDateValue);
-  } else if (monthValue) {
-    const year = monthValue.getFullYear();
-    const month = String(monthValue.getMonth() + 1).padStart(2, "0");
-
-    formatMonthValue = `${year}-${month}`;
-
-    console.log(formatMonthValue);
-  } else if (yearValue) {
-    const year = yearValue.getFullYear();
-
-    formatYearValue = `${year}`;
-
-    console.log(formatYearValue);
-  } else if (startDate && !endDate) {
-    const year = startDate.getFullYear();
-    const month = String(startDate.getMonth() + 1).padStart(2, "0");
-    const day = String(startDate.getDate()).padStart(2, "0");
-
-    formatStartDateValue = `${year}-${month}-${day}`;
-
-    console.log(formatStartDateValue);
-  } else if (startDate && endDate) {
-    const year = endDate.getFullYear();
-    const month = String(endDate.getMonth() + 1).padStart(2, "0");
-    const day = String(endDate.getDate()).padStart(2, "0");
-
-    formatEndDateValue = `${year}-${month}-${day}`;
-
-    console.log(formatEndDateValue);
-  } else {
-    console.log("No Data Found");
-  }
 
   const [summaryValues, setSummaryValues] = useState({
     num: 0,
