@@ -118,7 +118,13 @@ const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefr
     }
   };
 
-  const tabLists = [{ value: "0", title: "All", icon: <FontAwesomeIcon icon={faFolderOpen} /> }];
+  const tabLists = [
+    {
+      value: "0",
+      title: "Condition Reports",
+      icon: <FontAwesomeIcon icon={faFolderOpen} />,
+    },
+  ];
 
   const handleChange = (event, newValue) => {
     setTabSelect(newValue);
@@ -176,6 +182,7 @@ const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefr
                   icon={tab.icon}
                   iconPosition="start"
                   label={t(tab.title)}
+                  style={{ textTransform: "initial" }}
                 />
               ))}
             </TabList>
