@@ -155,6 +155,16 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
       ]);
     });
 
+    // Add headers to the worksheet Summary
+    const headerRow2 = worksheet.addRow(["Summary Product Price", "Delivery Price", "Total Price"]);headerRow2.font = { bold: true };
+
+    // Add data to the worksheet Summary
+    worksheet.addRow([
+      summaryValues.productPrice + "THB",
+      summaryValues.deliveryPrice + "THB",
+      summaryValues.totalPrice + "THB",
+    ]);
+
     // Auto-fit columns
     worksheet.columns.forEach((column) => {
       column.width = Math.max(12, column.width);
