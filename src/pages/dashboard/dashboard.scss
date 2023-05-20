@@ -2,10 +2,20 @@
     @apply bg-red-400 #{!important};
 }
 
+#dashboard-page .action-header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    .date-picker {
+        display:flex;
+    }
+}
+
 .chart-section {
-    height: 290px;
+    // height: 290px;
     overflow-x: auto;
-    overflow-y:hidden;
+    overflow-y: hidden;
     display: flex;
     gap: 2rem;
     padding: 0.1rem;
@@ -15,12 +25,13 @@
         padding: 5px;
         min-width: 400px;
         width: 33%;
-        height: 250px;
+        height: auto;
         display: flex;
         flex-direction: column;
         border-radius: 7px;
         background: #fff;
-        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.1411764706), 0 1px 5px 0 rgba(0, 0, 0, 0.1215686275);
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.1411764706),
+            0 1px 5px 0 rgba(0, 0, 0, 0.1215686275);
 
         .head-title {
             display: flex;
