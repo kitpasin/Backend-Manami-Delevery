@@ -135,67 +135,86 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
     });
   };
 
-  return (
-    <>
-      {filteredItems.length !== 0 && (
-        <Button variant="contained" color="success" size="small" onClick={exportToExcel} style={{marginBottom:"24px",textTransform:"initial"}}>
-          Export to Excel
-        </Button>
-      )}
+  // const summaryTable = [
+  //   <>
+  //   return (
+  //   <TableCell align="left">{summaryValues.productPrice} THB</TableCell>
+  //   <TableCell align="left">{summaryValues.deliveryPrice} THB</TableCell>
+  //   <TableCell align="left">{summaryValues.totalPrice} THB</TableCell>
+  //   )
+  //   </>
+  // ]
+  // if ((summaryValues.productPrice && summaryValues.deliveryPrice && summaryValues.totalPrice) !== 0) {
+  //   return summaryTable
+  // }
 
-      <TableContainer component={Paper} className="card-desktop" style={{ marginBottom: "24px" }}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Summary Product Price</TableCell>
-              <TableCell align="left">Summary Delivery Price</TableCell>
-              <TableCell align="left">Summary Total Price</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-              <TableCell align="left">{summaryValues.productPrice} THB</TableCell>
-              <TableCell align="left">{summaryValues.deliveryPrice} THB</TableCell>
-              <TableCell align="left">{summaryValues.totalPrice} THB</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+    return (
+      <>
+        {filteredItems.length !== 0 && (
+          <Button
+            variant="contained"
+            color="success"
+            size="small"
+            onClick={exportToExcel}
+            style={{ marginBottom: "24px", textTransform: "initial" }}
+          >
+            Export to Excel
+          </Button>
+        )}
 
-      <TableContainer component={Paper} className="card-desktop">
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Order Number</TableCell>
-              <TableCell align="left">Customer Name</TableCell>
-              <TableCell align="left">Branch</TableCell>
-              <TableCell align="left">Order Type</TableCell>
-              <TableCell align="left">Transaction Date</TableCell>
-              <TableCell align="left">Product Price</TableCell>
-              <TableCell align="left">Delivery Price</TableCell>
-              <TableCell align="left">Total Price</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredItems.map((row, index) => (
-              <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                <TableCell align="left">{row.orders_number}</TableCell>
-                <TableCell align="left">{row.member_name}</TableCell>
-                <TableCell align="left">{row.branch_name}</TableCell>
-                <TableCell align="left">{row.type_order}</TableCell>
-                <TableCell align="left">
-                  <DateMoment format={"LLL"} date={row.transaction_date} />
-                </TableCell>
-                <TableCell align="left">{row.total_price} THB</TableCell>
-                <TableCell align="left">{row.delivery_price} THB</TableCell>
-                <TableCell align="left">{row.total_price + row.delivery_price} THB</TableCell>
+        <TableContainer component={Paper} className="card-desktop" style={{ marginBottom: "24px" }}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Summary Product Price</TableCell>
+                <TableCell align="left">Summary Delivery Price</TableCell>
+                <TableCell align="left">Summary Total Price</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </>
-  );
+            </TableHead>
+            <TableBody>
+              <TableRow sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                <TableCell align="left">{summaryValues.productPrice} THB</TableCell>
+                <TableCell align="left">{summaryValues.deliveryPrice} THB</TableCell>
+                <TableCell align="left">{summaryValues.totalPrice} THB</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+
+        <TableContainer component={Paper} className="card-desktop">
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Order Number</TableCell>
+                <TableCell align="left">Customer Name</TableCell>
+                <TableCell align="left">Branch</TableCell>
+                <TableCell align="left">Order Type</TableCell>
+                <TableCell align="left">Transaction Date</TableCell>
+                <TableCell align="left">Product Price</TableCell>
+                <TableCell align="left">Delivery Price</TableCell>
+                <TableCell align="left">Total Price</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {filteredItems.map((row, index) => (
+                <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                  <TableCell align="left">{row.orders_number}</TableCell>
+                  <TableCell align="left">{row.member_name}</TableCell>
+                  <TableCell align="left">{row.branch_name}</TableCell>
+                  <TableCell align="left">{row.type_order}</TableCell>
+                  <TableCell align="left">
+                    <DateMoment format={"LLL"} date={row.transaction_date} />
+                  </TableCell>
+                  <TableCell align="left">{row.total_price} THB</TableCell>
+                  <TableCell align="left">{row.delivery_price} THB</TableCell>
+                  <TableCell align="left">{row.total_price + row.delivery_price} THB</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </>
+    );
 };
 
 export default ReportsCard;
