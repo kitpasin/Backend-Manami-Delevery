@@ -243,7 +243,7 @@ const ProductsTab = ({
                 displayEmpty
               >
                 <MenuItem value="">
-                  {t("ModalSlcCategory")}
+                  {t("All")}
                 </MenuItem>
                 {productCate?.map((p) => {
                   // Check if tabSelect and p.id

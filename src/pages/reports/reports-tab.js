@@ -27,14 +27,20 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
-const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefreshData }) => {
+const ReportsTab = ({
+  tabSelect,
+  setTabSelect,
+  reportsData,
+  refreshData,
+  setRefreshData,
+  filteredItems,
+}) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [limited, setLimited] = useState({ begin: 0, end: rowsPerPage });
   const [page, setPage] = useState(0);
 
   const [filteredData, setFilteredData] = useState(reportsData);
   const [totalData, setTotalData] = useState(0);
- 
   // Date Picker
   const [mode, setMode] = useState("date");
   const [dateValue, setDateValue] = useState(null);
@@ -89,20 +95,14 @@ const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefr
   };
 
   useEffect(() => {
-    const result = reportsData?.filter((d) => {
-      if (tabSelect != 0) {
-        if (tabSelect == d.status_id) {
-          return d;
-        }
-      } else {
-        return d;
-      }
-    });
+    const result = reportsData?.filter((d) => d.status_id === 4);
     if (result) {
       setTotalData(result.length);
       setFilteredData(result.slice(limited.begin, limited.end));
     }
   }, [tabSelect, reportsData, page, rowsPerPage]);
+
+  console.log(totalData)
 
   return (
     <Fragment>
@@ -262,6 +262,8 @@ const ReportsTab = ({ tabSelect, setTabSelect, reportsData, refreshData, setRefr
               <div className="item-list">
                 <ReportsCard
                   items={filteredData}
+                  totalData={totalData}
+                  setTotalData={setTotalData}
                   dateValue={dateValue}
                   monthValue={monthValue}
                   yearValue={yearValue}
