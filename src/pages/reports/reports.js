@@ -49,6 +49,8 @@ const Reports = () => {
             delivery_drop: d.delivery_drop,
             status_id: d.status_id,
             id: d.id,
+            washing_price : d.washing_price,
+            drying_price : d.drying_price,
             total_price: d.total_price,
             delivery_price: d.delivery_price
           };
@@ -78,7 +80,7 @@ const Reports = () => {
         icon={<FontAwesomeIcon icon={faTag} />}
         breadcrums={[{ title: "ReportsPage", link: false }]}
       />
-      <div className="card-control fixed-width">
+      <div className="card-control fixed-width" style={{ position: "relative" }}>
         <ReportsTab
           reportsData={reportsData}
           refreshData={refreshData}
