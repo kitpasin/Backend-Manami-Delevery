@@ -5,6 +5,10 @@ import dayjs from "dayjs";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
 
 import "./dashboard.scss";
 import { faGamepad, faRedo } from "@fortawesome/free-solid-svg-icons";
@@ -37,7 +41,6 @@ const DashboardPage = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [dateDisable, setDateDisable] = useState(true);
-
   const [totalPriceWash, setTotalPriceWash] = useState(0);
   const [totalPriceFood, setTotalPriceFood] = useState(0);
   const [deliveryPrice, setDeliveryPrice] = useState(0);
@@ -45,14 +48,15 @@ const DashboardPage = () => {
   const [orderDash, setOrderDash] = useState([]);
   const [min, setMin] = useState("");
   const [max, setMax] = useState("");
+
+  const [totalPrice, setTotalPrice] = useState(0);
+
   const minDate = dayjs("2023-01-01");
-  const maxDate = minDate.add(10, "year")
+  const maxDate = minDate.add(10, "year");
 
   useEffect(() => {
-    console.log(startDate, "start date")
-    console.log(endDate, "end date")
-    svGetOrderBar(startDate, endDate).then((res) => console.log(res.data))
-  }, [endDate])
+    // svGetOrderBar(startDate, endDate).then((res) => console.log(res.data));
+  }, [endDate]);
 
   useEffect(() => {
     let ttWash = 0;
@@ -148,6 +152,32 @@ const DashboardPage = () => {
     setFIlteredData(filted);
   };
 
+  const [views, setViews] = useState("week");
+  const [title, setTitle] = useState("");
+
+  useEffect(() => {
+    if (views === "week") {
+      setStartDate(dayjs().subtract(6, "day").toISOString().substring(0, 10));
+      setEndDate(dayjs().toISOString().substring(0, 10));
+      setTitle("7 Days ago");
+    } else if (views === "month") {
+      const today = new Date();
+      today.toLocaleString("default", { month: "long" });
+      setTitle(today.toLocaleString("default", { month: "long" }));
+    } else if (views === "year") {
+      setTitle("2023");
+    }
+    svGetOrderBar(startDate, endDate).then((res) => {
+      if (res.status) {
+        setOrderDash(res.data);
+      }
+    });
+  }, [views]);
+
+  const handleChange = (e) => {
+    setViews(e.target.value);
+  };
+
   return (
     <section id="dashboard-page">
       <HeadPageComponent
@@ -165,22 +195,35 @@ const DashboardPage = () => {
           {t("Fetch")}
         </ButtonUI>
         <div className="date-picker">
-          {/* <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  onChange={(e) =>
-                    e.target.checked
-                      ? setMountChecked(true)
-                      : setMountChecked(false)
-                  }
-                  defaultChecked={true}
-                />
-              }
-              label="Month"
-            />
-          </FormGroup> */}
-          <DatePickerComponent
+          <FormControl>
+            <RadioGroup
+              row
+              aria-labelledby="demo-row-radio-buttons-group-label"
+              name="row-radio-buttons-group"
+              defaultValue={"week"}
+            >
+              <FormControlLabel
+                value="week"
+                onChange={handleChange}
+                control={<Radio />}
+                label="Week"
+              />
+              <FormControlLabel
+                value="month"
+                onChange={handleChange}
+                control={<Radio />}
+                label="Month"
+              />
+              <FormControlLabel
+                value="year"
+                onChange={handleChange}
+                control={<Radio />}
+                label="Year"
+              />
+            </RadioGroup>
+          </FormControl>
+
+          {/* <DatePickerComponent
             state={true}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
@@ -204,60 +247,85 @@ const DashboardPage = () => {
             setMin={setMin}
             maxDate={max}
             setMax={setMax}
-          />
+          /> */}
         </div>
       </div>
 
       <div className="chart-section">
-        <div className="card-chart-control">
-          <div className="head-title">
-            <p>Wash&Dry</p>
-            <p>Total: {totalPriceWash} THB</p>
+        <div className="pie-chart"></div>
+          
+        <div className="bar-chart">
+          <div className="card-chart-control">
+            <div className="head-title">
+              <p>Wash&Dry</p>
+              <h3>{title}</h3>
+              <p>Total: {totalPriceWash} THB</p>
+            </div>
+            <div className="card-body">
+              <Chart
+                colorRGB={"7, 148, 239, 1"}
+                barTitle={"Wash&Dry"}
+                mountChecked={mountChecked}
+                setMountChecked={setMountChecked}
+                orderDash={orderDash}
+                setRefreshData={setRefreshData}
+                refreshData={refreshData}
+                views={views}
+                startDate={startDate}
+                endDate={endDate}
+                setTotalPriceFood={setTotalPriceFood}
+                setTotalPriceWash={setTotalPriceWash}
+                setTotalPrice={setTotalPrice}
+              />
+            </div>
           </div>
-          <div className="card-body">
-            <Chart
-              colorRGB={"7, 148, 239, 1"}
-              barTitle={"Wash&Dry"}
-              mountChecked={mountChecked}
-              setMountChecked={setMountChecked}
-              orderDash={orderDash}
-              setRefreshData={setRefreshData}
-              refreshData={refreshData}
-            />
-           </div>
-        </div>
-        <div className="card-chart-control">
-          <div className="head-title">
-            <p>Vending&Cafe</p>
-            <p>Total: {totalPriceFood} THB</p>
+          <div className="card-chart-control">
+            <div className="head-title">
+              <p>Vending&Cafe</p>
+              <h3>{title}</h3>
+              <p>Total: {totalPriceFood} THB</p>
+            </div>
+            <div className="card-body">
+              <Chart
+                colorRGB={"255, 87, 51, 1"}
+                barTitle={"Vending&Cafe"}
+                mountChecked={mountChecked}
+                setMountChecked={setMountChecked}
+                orderDash={orderDash}
+                refreshData={refreshData}
+                setRefreshData={setRefreshData}
+                views={views}
+                dateStart={startDate}
+                dateEnd={endDate}
+                setTotalPriceFood={setTotalPriceFood}
+                setTotalPriceWash={setTotalPriceWash}
+                setTotalPrice={setTotalPrice}
+              />
+            </div>
           </div>
-          <div className="card-body">
-            <Chart
-              colorRGB={"255, 87, 51, 1"}
-              barTitle={"Vending&Cafe"}
-              mountChecked={mountChecked}
-              setMountChecked={setMountChecked}
-              orderDash={orderDash}
-              refreshData={refreshData}
-              setRefreshData={setRefreshData}
-            />
-          </div>
-        </div>
-        <div className="card-chart-control">
-          <div className="head-title">
-            <p>Delivery</p>
-            <p>Total: {deliveryPrice} THB</p>
-          </div>
-          <div className="card-body">
-            <Chart
-              colorRGB={"33, 183, 23, 1"}
-              barTitle={"Delivery"}
-              mountChecked={mountChecked}
-              setMountChecked={setMountChecked}
-              orderDash={orderDash}
-              setRefreshData={setRefreshData}
-              refreshData={refreshData}
-            />
+          <div className="card-chart-control">
+            <div className="head-title">
+              <p>Delivery</p>
+              <h3>{title}</h3>
+              <p>Total: {totalPrice} THB</p>
+            </div>
+            <div className="card-body">
+              <Chart
+                colorRGB={"33, 183, 23, 1"}
+                barTitle={"Delivery"}
+                mountChecked={mountChecked}
+                setMountChecked={setMountChecked}
+                orderDash={orderDash}
+                setRefreshData={setRefreshData}
+                refreshData={refreshData}
+                views={views}
+                startDate={startDate}
+                endDate={endDate}
+                setTotalPriceFood={setTotalPriceFood}
+                setTotalPriceWash={setTotalPriceWash}
+                setTotalPrice={setTotalPrice}
+              />
+            </div>
           </div>
         </div>
       </div>
