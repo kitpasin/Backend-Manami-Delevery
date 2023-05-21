@@ -9,6 +9,8 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
 import "./dashboard.scss";
 import { faGamepad, faRedo } from "@fortawesome/free-solid-svg-icons";
@@ -23,6 +25,7 @@ import { svGetOrders, svGetOrderPending } from "../../services/orders.service";
 import Chart from "./chart";
 import DatePickerComponent from "./DatePicker";
 import { svGetOrderBar } from "../../services/dashboard.service";
+import DonutChart from "./DonutChart";
 
 const DashboardPage = () => {
   const { t } = useTranslation(["dashboard-page"]);
@@ -53,107 +56,102 @@ const DashboardPage = () => {
 
   const minDate = dayjs("2023-01-01");
   const maxDate = minDate.add(10, "year");
-
-  useEffect(() => {
-    // svGetOrderBar(startDate, endDate).then((res) => console.log(res.data));
-  }, [endDate]);
-
-  useEffect(() => {
-    let ttWash = 0;
-    let ttFood = 0;
-    let delivery_price = 0;
-    // svGetOrderDash(year.$y).then((res) => {
-    //   const order_data = res.data?.map((d) => {
-    //     d.type_order == "washing"
-    //       ? (ttWash += d.total_price)
-    //       : (ttFood += d.total_price);
-    //     delivery_price += d.delivery_price;
-    //     return {
-    //       orders_number: d.orders_number,
-    //       delivery_drop_address: d.delivery_drop_address,
-    //       delivery_drop_address_more: d.delivery_drop_address_more,
-    //       delivery_pickup_address: d.delivery_pickup_address,
-    //       delivery_pickup_address_more: d.delivery_pickup_address_more,
-    //       details: d.details,
-    //       phone_number: d.phone_number,
-    //       status: d.status_name,
-    //       transaction_date: d.transaction_date,
-    //       shipping_date: d.shipping_date,
-    //       type_order: d.type_order,
-    //       date_pickup: d.date_pickup,
-    //       date_drop: d.date_drop,
-    //       pickup_image: d.pickup_image,
-    //       drop_image: d.drop_image,
-    //       member_name: d.member_name,
-    //       branch_name: d.branch_name,
-    //       branch_id: d.branch_id,
-    //       delivery_pickup: d.delivery_pickup,
-    //       delivery_drop: d.delivery_drop,
-    //       status_id: d.status_id,
-    //       id: d.id,
-    //       total_price: d.total_price,
-    //     };
-    //   });
-    //   // orderData?.map((item) => {
-    //   //   item.type_order == "washing"
-    //   //     ? (ttWash += item.total_price)
-    //   //     : (ttFood += item.total_price);
-    //   //   delivery_price += item.delivery_price;
-    //   // });
-    //   setTotalPriceWash(ttWash);
-    //   setTotalPriceFood(ttFood);
-    //   setDeliveryPrice(delivery_price);
-    //   setOrderDash(order_data);
-    // });
-  }, [mountChecked, refreshData]);
-
-  useEffect(() => {
-    dispatch(appActions.isSpawnActive(true));
-    svGetOrders("").then((res) => {
-      if (res.status) {
-        const order_data = res.data?.map((d) => {
-          return {
-            orders_number: d.orders_number,
-            delivery_drop_address: d.delivery_drop_address,
-            delivery_drop_address_more: d.delivery_drop_address_more,
-            delivery_pickup_address: d.delivery_pickup_address,
-            delivery_pickup_address_more: d.delivery_pickup_address_more,
-            details: d.details,
-            phone_number: d.phone_number,
-            status: d.status_name.toLowerCase(),
-            transaction_date: d.transaction_date,
-            shipping_date: d.shipping_date,
-            type_order: d.type_order,
-            date_pickup: d.date_pickup,
-            date_drop: d.date_drop,
-            pickup_image: d.pickup_image,
-            drop_image: d.drop_image,
-            member_name: d.member_name,
-            branch_name: d.branch_name,
-            branch_id: d.branch_id,
-            delivery_pickup: d.delivery_pickup,
-            delivery_drop: d.delivery_drop,
-            status_id: d.status_id,
-            id: d.id,
-            total_price: d.total_price,
-          };
-        });
-      } else {
-        // setOrdersData([]);
-      }
-      dispatch(appActions.isSpawnActive(false));
-    });
-  }, [refreshData]);
-
-  const filterData = () => {
-    const filted = orderData.filter((f) => {
-      return f;
-    });
-    setFIlteredData(filted);
-  };
-
   const [views, setViews] = useState("week");
   const [title, setTitle] = useState("");
+
+  // useEffect(() => {
+  //   let ttWash = 0;
+  //   let ttFood = 0;
+  //   let delivery_price = 0;
+  //   // svGetOrderDash(year.$y).then((res) => {
+  //   //   const order_data = res.data?.map((d) => {
+  //   //     d.type_order == "washing"
+  //   //       ? (ttWash += d.total_price)
+  //   //       : (ttFood += d.total_price);
+  //   //     delivery_price += d.delivery_price;
+  //   //     return {
+  //   //       orders_number: d.orders_number,
+  //   //       delivery_drop_address: d.delivery_drop_address,
+  //   //       delivery_drop_address_more: d.delivery_drop_address_more,
+  //   //       delivery_pickup_address: d.delivery_pickup_address,
+  //   //       delivery_pickup_address_more: d.delivery_pickup_address_more,
+  //   //       details: d.details,
+  //   //       phone_number: d.phone_number,
+  //   //       status: d.status_name,
+  //   //       transaction_date: d.transaction_date,
+  //   //       shipping_date: d.shipping_date,
+  //   //       type_order: d.type_order,
+  //   //       date_pickup: d.date_pickup,
+  //   //       date_drop: d.date_drop,
+  //   //       pickup_image: d.pickup_image,
+  //   //       drop_image: d.drop_image,
+  //   //       member_name: d.member_name,
+  //   //       branch_name: d.branch_name,
+  //   //       branch_id: d.branch_id,
+  //   //       delivery_pickup: d.delivery_pickup,
+  //   //       delivery_drop: d.delivery_drop,
+  //   //       status_id: d.status_id,
+  //   //       id: d.id,
+  //   //       total_price: d.total_price,
+  //   //     };
+  //   //   });
+  //   //   // orderData?.map((item) => {
+  //   //   //   item.type_order == "washing"
+  //   //   //     ? (ttWash += item.total_price)
+  //   //   //     : (ttFood += item.total_price);
+  //   //   //   delivery_price += item.delivery_price;
+  //   //   // });
+  //   //   setTotalPriceWash(ttWash);
+  //   //   setTotalPriceFood(ttFood);
+  //   //   setDeliveryPrice(delivery_price);
+  //   //   setOrderDash(order_data);
+  //   // });
+  // }, [mountChecked, refreshData]);
+
+  // useEffect(() => {
+  //   dispatch(appActions.isSpawnActive(true));
+  //   svGetOrders("").then((res) => {
+  //     if (res.status) {
+  //       const order_data = res.data?.map((d) => {
+  //         return {
+  //           orders_number: d.orders_number,
+  //           delivery_drop_address: d.delivery_drop_address,
+  //           delivery_drop_address_more: d.delivery_drop_address_more,
+  //           delivery_pickup_address: d.delivery_pickup_address,
+  //           delivery_pickup_address_more: d.delivery_pickup_address_more,
+  //           details: d.details,
+  //           phone_number: d.phone_number,
+  //           status: d.status_name.toLowerCase(),
+  //           transaction_date: d.transaction_date,
+  //           shipping_date: d.shipping_date,
+  //           type_order: d.type_order,
+  //           date_pickup: d.date_pickup,
+  //           date_drop: d.date_drop,
+  //           pickup_image: d.pickup_image,
+  //           drop_image: d.drop_image,
+  //           member_name: d.member_name,
+  //           branch_name: d.branch_name,
+  //           branch_id: d.branch_id,
+  //           delivery_pickup: d.delivery_pickup,
+  //           delivery_drop: d.delivery_drop,
+  //           status_id: d.status_id,
+  //           id: d.id,
+  //           total_price: d.total_price,
+  //         };
+  //       });
+  //     } else {
+  //       // setOrdersData([]);
+  //     }
+  //     dispatch(appActions.isSpawnActive(false));
+  //   });
+  // }, [refreshData]);
+
+  // const filterData = () => {
+  //   const filted = orderData.filter((f) => {
+  //     return f;
+  //   });
+  //   setFIlteredData(filted);
+  // };
 
   useEffect(() => {
     if (views === "week") {
@@ -194,36 +192,83 @@ const DashboardPage = () => {
         >
           {t("Fetch")}
         </ButtonUI>
-        <div className="date-picker">
-          <FormControl>
-            <RadioGroup
-              row
-              aria-labelledby="demo-row-radio-buttons-group-label"
-              name="row-radio-buttons-group"
-              defaultValue={"week"}
-            >
-              <FormControlLabel
-                value="week"
-                onChange={handleChange}
-                control={<Radio />}
-                label="Week"
-              />
-              <FormControlLabel
-                value="month"
-                onChange={handleChange}
-                control={<Radio />}
-                label="Month"
-              />
-              <FormControlLabel
-                value="year"
-                onChange={handleChange}
-                control={<Radio />}
-                label="Year"
-              />
-            </RadioGroup>
-          </FormControl>
+      </div>
+      <div className="chart-section">
+        <div className="donut-chart">
+          <div className="head-title">
+            <Typography variant="subtitle1" gutterBottom>
+              แสดงยอดแต่ละประเภท/ต่อวัน
+            </Typography>
+            <Typography variant="h6" gutterBottom>
+              23 Sep 2023
+            </Typography>
+          </div>
+          <div className="chart-content">
+            <div className="content-left">
+              <DonutChart />
+            </div>
+            <div className="content-right">
+              <Grid container columnSpacing={2} rowSpacing={6}>
+                <Grid container item xs={6} direction="column">
+                  <div className="price-details"></div>
+                </Grid>
+                <Grid container item xs={6} direction="column">
+                  <div className="price-details"></div>
+                </Grid>
+                <Grid container item xs={6} direction="column">
+                  <div className="price-details"></div>
+                </Grid>
+                <Grid container item xs={6} direction="column">
+                  <div className="price-details"></div>
+                </Grid>
+                <Grid container item xs={6} direction="column">
+                  <div className="price-details"></div>
+                </Grid>
+                <Grid container item xs={6} direction="column">
+                  <div className="price-details"></div>
+                </Grid>
+              </Grid>
+            </div>
+          </div>
+        </div>
 
-          {/* <DatePickerComponent
+        <div className="bar-chart">
+          <div className="bar-chart-head">
+            <div className="head-title">
+              <Typography variant="subtitle1" gutterBottom>
+                แสดงยอดแต่ละประเภท/เดือน/ปี
+              </Typography>
+            </div>
+            <div className="date-picker">
+              <FormControl>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  defaultValue={"week"}
+                >
+                  <FormControlLabel
+                    value="week"
+                    onChange={handleChange}
+                    control={<Radio />}
+                    label="Week"
+                  />
+                  <FormControlLabel
+                    value="month"
+                    onChange={handleChange}
+                    control={<Radio />}
+                    label="Month"
+                  />
+                  <FormControlLabel
+                    value="year"
+                    onChange={handleChange}
+                    control={<Radio />}
+                    label="Year"
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              {/* <DatePickerComponent
             state={true}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
@@ -248,13 +293,9 @@ const DashboardPage = () => {
             maxDate={max}
             setMax={setMax}
           /> */}
-        </div>
-      </div>
+            </div>
+          </div>
 
-      <div className="chart-section">
-        <div className="pie-chart"></div>
-          
-        <div className="bar-chart">
           <div className="card-chart-control">
             <div className="head-title">
               <p>Wash&Dry</p>
