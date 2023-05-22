@@ -112,8 +112,6 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
 
     setFilteredItems(filteredItems);
 
-    setTotalData(filteredItems.length)
-
   }, [items, startDate, endDate, dateValue, monthValue, yearValue, selectedOrderTypeId, wadType]);
 
   const handleChangeSelect = (event) => {

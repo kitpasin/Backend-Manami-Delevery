@@ -35,7 +35,7 @@ const ReportsTab = ({
   setRefreshData,
   filteredItems,
 }) => {
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(99999);
   const [limited, setLimited] = useState({ begin: 0, end: rowsPerPage });
   const [page, setPage] = useState(0);
 
@@ -101,8 +101,6 @@ const ReportsTab = ({
       setFilteredData(result.slice(limited.begin, limited.end));
     }
   }, [tabSelect, reportsData, page, rowsPerPage]);
-
-  console.log(totalData)
 
   return (
     <Fragment>
@@ -271,14 +269,15 @@ const ReportsTab = ({
                   endDate={endDate}
                 />
               </div>
-              <TablePagination
+              {/* <TablePagination
+                rowsPerPageOptions={[10,100,1000,10000,99999]}
                 component="div"
                 count={totalData}
                 page={page}
                 rowsPerPage={rowsPerPage}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
-              />
+              /> */}
             </TabPanel>
           ))}
         </TabContext>
