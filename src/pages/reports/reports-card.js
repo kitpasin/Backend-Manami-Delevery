@@ -25,13 +25,23 @@ import ExcelJS from "exceljs";
 import saveAs from "file-saver";
 import ReportsTab from "./reports-tab";
 
-const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDate, totalData, setTotalData }) => {
+const ReportsCard = ({
+  items,
+  dateValue,
+  monthValue,
+  yearValue,
+  startDate,
+  endDate,
+}) => {
   const [summaryValues, setSummaryValues] = useState({
     num: 0,
     productPrice: 0,
     deliveryPrice: 0,
     totalPrice: 0,
-  }); 
+  });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
 
   const [filteredItems, setFilteredItems] = useState([]);
 
@@ -103,7 +113,6 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
         : (updateTotalPrice += row.drying_price + row.delivery_price);
     });
 
-
     setSummaryValues({
       productPrice: updateProductPrice,
       deliveryPrice: updateDeliveryPrice,
@@ -111,10 +120,13 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
     });
 
     setFilteredItems(filteredItems);
-
-    setTotalData(filteredItems.length)
-
   }, [items, startDate, endDate, dateValue, monthValue, yearValue, selectedOrderTypeId, wadType]);
+
+  // Update the displayed items based on the page and rowsPerPage
+  const indexOfLastItem = (page + 1) * rowsPerPage;
+  const indexOfFirstItem = indexOfLastItem - rowsPerPage;
+  const displayedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+
 
   const handleChangeSelect = (event) => {
     const selectedId = event.target.value;
@@ -123,6 +135,9 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
     setSelectedOrderTypeId(selectedId); // Update the selected category ID state
     if (selectedId !== "washing") {
       setWadType("all");
+      setPage(0)
+    } else {
+      setPage(0)
     }
   };
 
@@ -163,7 +178,7 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
       if (selectedOrderTypeId === "washing" && wadType === "all") {
         t_order = "Washing and Drying";
         price = row.total_price + " THB";
-        t_price = row.total_price + row.delivery_price + " THB"
+        t_price = row.total_price + row.delivery_price + " THB";
       } else if (selectedOrderTypeId === "washing" && wadType === "wash") {
         t_order = "Washing";
         price = row.washing_price + " THB";
@@ -191,10 +206,9 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
         row.transaction_date,
         price,
         row.delivery_price + " THB",
-        t_price
+        t_price,
       ]);
     });
-
 
     // Auto-fit columns
     worksheet.columns.forEach((column) => {
@@ -318,7 +332,7 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredItems.map((row, index) => (
+            {displayedItems.map((row, index) => (
               <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                 <TableCell align="left">{row.orders_number}</TableCell>
                 <TableCell align="left">{row.member_name}</TableCell>
@@ -361,6 +375,18 @@ const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDa
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[10, 100, 1000, 10000, 50000, 99999]}
+        component="div"
+        count={filteredItems.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={(event, newPage) => setPage(newPage)}
+        onRowsPerPageChange={(event) => {
+          setRowsPerPage(parseInt(event.target.value, 10));
+          setPage(0);
+        }}
+      />
     </>
   );
 };
