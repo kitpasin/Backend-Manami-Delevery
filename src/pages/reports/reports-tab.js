@@ -35,10 +35,6 @@ const ReportsTab = ({
   setRefreshData,
   filteredItems,
 }) => {
-  const [rowsPerPage, setRowsPerPage] = useState(99999);
-  const [limited, setLimited] = useState({ begin: 0, end: rowsPerPage });
-  const [page, setPage] = useState(0);
-
   const [filteredData, setFilteredData] = useState(reportsData);
   const [totalData, setTotalData] = useState(0);
   // Date Picker
@@ -74,33 +70,15 @@ const ReportsTab = ({
 
   const handleChange = (event, newValue) => {
     setTabSelect(newValue);
-    setLimited({ begin: 0, end: rowsPerPage });
-    setPage(0);
-  };
-
-  /* Pagination */
-  const handleChangePage = (event, newPage) => {
-    setLimited({
-      begin: newPage * rowsPerPage,
-      end: (newPage + 1) * rowsPerPage,
-    });
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    let rowPage = parseInt(event.target.value, 10);
-    setRowsPerPage(rowPage);
-    setLimited({ begin: 0, end: rowPage });
-    setPage(0);
   };
 
   useEffect(() => {
     const result = reportsData?.filter((d) => d.status_id === 4);
     if (result) {
       setTotalData(result.length);
-      setFilteredData(result.slice(limited.begin, limited.end));
+      setFilteredData(result);
     }
-  }, [tabSelect, reportsData, page, rowsPerPage]);
+  }, [tabSelect, reportsData]);
 
   return (
     <Fragment>
@@ -260,8 +238,9 @@ const ReportsTab = ({
               <div className="item-list">
                 <ReportsCard
                   items={filteredData}
-                  totalData={totalData}
                   setTotalData={setTotalData}
+                  setFilteredData={setFilteredData}
+        
                   dateValue={dateValue}
                   monthValue={monthValue}
                   yearValue={yearValue}
