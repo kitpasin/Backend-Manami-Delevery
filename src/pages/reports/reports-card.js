@@ -135,6 +135,9 @@ const ReportsCard = ({
     setSelectedOrderTypeId(selectedId); // Update the selected category ID state
     if (selectedId !== "washing") {
       setWadType("all");
+      setPage(0)
+    } else {
+      setPage(0)
     }
   };
 
