@@ -2,13 +2,72 @@
     @apply bg-red-400 #{!important};
 }
 
-#dashboard-page .action-header {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
+#dashboard-page {
+    overflow: auto;
 
-    .date-picker {
+    .action-header {
         display: flex;
+        width: 100%;
+        justify-content: space-between;
+
+        .date-picker {
+            display: flex;
+        }
+    }
+
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+        .table-section {
+            display: flex;
+            flex-direction: column;
+            min-width: 820px;
+            gap: 1rem;
+            width: 100%;
+            height: auto;
+            padding: 1rem;
+            border-radius: 7px;
+            background: #fff;
+            box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.1411764706),
+                0 1px 5px 0 rgba(0, 0, 0, 0.1215686275);
+
+            .header {
+                width: 100%;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .price-details {
+                width: 100%;
+                display:flex;
+                gap: 1rem;
+
+                .details-list {
+                    display: flex;
+                    width: 20%;
+                    padding: .5rem;
+                    height: 70px;
+                    border-radius: 10px;
+                    color: #fff;
+
+                    .content-left {
+                        width: 80%;
+                    }
+
+                    .content-right {
+                        width: 20%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                }
+            }
+        }
     }
 }
 
@@ -73,11 +132,15 @@
                 // justify-content: center;
 
                 .price-details {
+                    color: #fff;
+                    display: flex;
+                    flex-direction: column;
+                    padding: 1rem;
                     width: 100%;
                     max-width: 185px;
                     height: 155px;
-                    background: #3345eb;
-                    border-radius: 20px;
+                    background-color: rgba(3, 0, 171, 1);
+                    border-radius: 25px;
                     box-shadow: -1px 20px 20px 0px rgba(4, 113, 255, 0.2), 5px 8px 19px 0px rgba(4, 113, 255, 0.2),
                         3px 20px 19px 0px rgba(4, 113, 255, 0.2);
                 }

@@ -1,19 +1,22 @@
 import React from "react";
 import Chart from "react-apexcharts";
 
-function DonutChart() {
+function DonutChart({ data, labelTitles }) {
+  const colors = ["#0300AB", "#169CE7", "#FF9029", "#0fb900", "#E32900", "#FF599F"];
+  console.log(data)
   return (
     <React.Fragment>
       <Chart
         type="donut"
-        width={300}
-        height={300}
-        series={[45, 67, 89, 34, 43]}
+        width={370}
+        height={370}
+        series={data}
         options={{
+          colors: colors,
           chart: {
             // width: "100%"
           },
-          labels: ["USA", "China", "Russia", "India", "Uk"],
+          labels: labelTitles,
 
           plotOptions: {
             pie: {
@@ -21,33 +24,28 @@ function DonutChart() {
                 labels: {
                   show: true,
                   total: {
-                    show: true,
+                    show: false,
                     showAlways: false,
                   },
                 },
-                // size: "65%",
               },
               expandOnClick: true,
               size: 299,
-              
-            //   customScale: 0.8,
             },
           },
-
-          //   responsive: [
-          //     {
-          //       breakpoint: 480,
-          //       options: {
-          //         chart: {
-          //           width: 200,
-          //         },
-          //         legend: {
-          //           position: "bottom",
-          //         },
-          //       },
-          //     },
-          //   ],
-
+          responsive: [
+            {
+              breakpoint: 1670,
+              options: {
+                chart: {
+                  width: 250,
+                },
+                legend: {
+                  position: "bottom",
+                },
+              },
+            },
+          ],
           dataLabels: {
             enabled: false,
           },

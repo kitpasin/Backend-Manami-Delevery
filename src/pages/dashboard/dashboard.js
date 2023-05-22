@@ -26,6 +26,11 @@ import Chart from "./chart";
 import DatePickerComponent from "./DatePicker";
 import { svGetOrderBar } from "../../services/dashboard.service";
 import DonutChart from "./DonutChart";
+import TableTab from "./TableTab";
+import {
+  svGetOrderDonut,
+  svGetOrderTable,
+} from "../../services/dashboard.service";
 
 const DashboardPage = () => {
   const { t } = useTranslation(["dashboard-page"]);
@@ -57,7 +62,11 @@ const DashboardPage = () => {
   const minDate = dayjs("2023-01-01");
   const maxDate = minDate.add(10, "year");
   const [views, setViews] = useState("week");
+  const [viewsList, setViewsList] = useState("all");
   const [title, setTitle] = useState("");
+  const [orderDonut, setOrderDonut] = useState([]);
+  const [orderList, setOrderList] = useState([]);
+  const [orderListTable, setOrderListTable] = useState([]);
 
   // useEffect(() => {
   //   let ttWash = 0;
@@ -172,9 +181,190 @@ const DashboardPage = () => {
     });
   }, [views]);
 
+  useEffect(() => {
+    dispatch(appActions.isSpawnActive(true));
+    svGetOrderDonut().then((res) => {
+      let priceDetails = [];
+      let listDetails = [];
+      let orderTable = [];
+      let ttWash = 0;
+      let ttDry = 0;
+      let ttFoods = 0;
+      let ttIron = 0;
+      let ttDelivery = 0;
+      let ttAll = 0;
+      let orderComplete = 0;
+      let orderFails = 0;
+      if (res.status) {
+        console.log(res.data);
+        res.data?.map((item, ind) => {
+          orderComplete += 1;
+          if (item.status_id === 4) {
+            if (item.type_order === "washing") {
+              ttWash += item.washing_price;
+              ttDry += item.drying_price;
+            } else if (item.type_order === "foods") {
+              ttFoods += item.total_price;
+            } else {
+              ttIron += item.total_price;
+            }
+            ttDelivery += item.delivery_price;
+            ttAll = ttDelivery + ttWash + ttDry + ttFoods;
+          } else if (item.status_id === 5) {
+            orderFails += 1;
+          }
+          if (item.status_id === 4 || item.status_id === 5) {
+            orderTable.push(item);
+          }
+        });
+        priceDetails.push(ttWash);
+        priceDetails.push(ttDry);
+        priceDetails.push(ttFoods);
+        priceDetails.push(ttIron);
+        priceDetails.push(ttDelivery);
+        priceDetails.push(ttAll);
+
+        listDetails.push(orderComplete);
+        listDetails.push(orderFails);
+        listDetails.push(ttWash + ttDry + ttFoods);
+        listDetails.push(ttDelivery);
+        listDetails.push(ttAll);
+
+        setOrderDonut(priceDetails);
+        setOrderList(listDetails);
+        setOrderListTable(orderTable);
+
+        console.log(orderListTable);
+      }
+      dispatch(appActions.isSpawnActive(false));
+    });
+
+    // svGetOrderList().then((res) => {
+    //   console.log(res.data);
+    // });
+  }, [refreshData]);
+
+  useEffect(() => {
+    svGetOrderDonut().then((res) => {
+      let data = [];
+      if (res.status) {
+        if (viewsList === "all") {
+          data = res.data?.filter(
+            (item) => item.status_id === 4 || item.status_id === 5
+          );
+        } else if (viewsList === "wash&dry") {
+          data = res.data?.filter((item) => item.type_order === "washing");
+        } else if (viewsList === "food") {
+          data = res.data?.filter((item) => item.type_order === "foods");
+        } else if (viewsList === "fails") {
+          data = res.data?.filter((item) => item.status_id === 5);
+        } else {
+          data = res.data?.filter((item) => item.status_id === 4);
+        }
+      }
+      setOrderListTable(data)
+    });
+  }, [viewsList]);
+
   const handleChange = (e) => {
-    setViews(e.target.value);
+    if (
+      e.target.value !== "week" &&
+      e.target.value !== "month" &&
+      e.target.value !== "year"
+    ) {
+      setViewsList(e.target.value);
+    } else {
+      setViews(e.target.value);
+    }
   };
+
+  const thumbnailType = [
+    "/images/dashboard/washing.png",
+    "/images/dashboard/drying.png",
+    "/images/dashboard/food.png",
+    "/images/dashboard/iron.png",
+    "/images/dashboard/delivery.png",
+    "/images/dashboard/total.png",
+  ];
+
+  const labelTitles = [
+    "Washing",
+    "Drying",
+    "Food",
+    "Iron",
+    "Delivery",
+    "Total",
+  ];
+
+  const detailsStyle = [
+    {
+      backgroundColor: "rgb(3,0,171)",
+      boxShadow: "-1px 20px 20px 0px rgba(3,0,171, 0.2)",
+    },
+    {
+      backgroundColor: "rgb(22,156,231)",
+      boxShadow: "-1px 20px 20px 0px rgba(22,156,231, 0.4)",
+    },
+    {
+      backgroundColor: "rgb(255,144,41)",
+      boxShadow: "-1px 20px 20px 0px rgba(255,144,41, 0.4)",
+    },
+    {
+      backgroundColor: "rgb(15,185,0)",
+      boxShadow: "-1px 20px 20px 0px rgba(15,185,0, 0.4)",
+    },
+    {
+      backgroundColor: "rgb(227,41,0)",
+      boxShadow: "-1px 20px 20px 0px rgba(227,41,0, 0.4)",
+    },
+    {
+      backgroundColor: "rgb(255,89,159)",
+      boxShadow: "-1px 20px 20px 0px rgba(255,89,159, 0.4)",
+    },
+  ];
+
+  const orderListStyle = [
+    {
+      style: {
+        backgroundColor: "#0FB900",
+      },
+      title: "Complete",
+      thumbnail: "images/dashboard/complete.png",
+      unit: "List",
+    },
+    {
+      style: {
+        backgroundColor: "#E32900",
+      },
+      title: "Fails",
+      thumbnail: "images/dashboard/fails.png",
+      unit: "List",
+    },
+    {
+      style: {
+        backgroundColor: "#001524",
+      },
+      title: "Product and Services",
+      thumbnail: "images/dashboard/store.png",
+      unit: "THB",
+    },
+    {
+      style: {
+        backgroundColor: "#78290F",
+      },
+      title: "Delivery",
+      thumbnail: "images/dashboard/delivery.png",
+      unit: "THB",
+    },
+    {
+      style: {
+        backgroundColor: "#89003A",
+      },
+      title: "Total",
+      thumbnail: "images/dashboard/total.png",
+      unit: "THB",
+    },
+  ];
 
   return (
     <section id="dashboard-page">
@@ -193,180 +383,293 @@ const DashboardPage = () => {
           {t("Fetch")}
         </ButtonUI>
       </div>
-      <div className="chart-section">
-        <div className="donut-chart">
-          <div className="head-title">
-            <Typography variant="subtitle1" gutterBottom>
-              แสดงยอดแต่ละประเภท/ต่อวัน
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              23 Sep 2023
-            </Typography>
-          </div>
-          <div className="chart-content">
-            <div className="content-left">
-              <DonutChart />
+      <div className="main-content">
+        <div className="chart-section">
+          <div className="donut-chart">
+            <div className="head-title">
+              <Typography variant="subtitle1" gutterBottom>
+                Order Type / Day
+              </Typography>
+              <Typography variant="h6" gutterBottom>
+                22 May 2023
+              </Typography>
             </div>
-            <div className="content-right">
-              <Grid container columnSpacing={2} rowSpacing={6}>
-                <Grid container item xs={6} direction="column">
-                  <div className="price-details"></div>
+            <div className="chart-content">
+              <div className="content-left">
+                <DonutChart data={orderDonut} labelTitles={labelTitles} />
+              </div>
+              <div className="content-right">
+                <Grid container columnSpacing={2} rowSpacing={6}>
+                  {detailsStyle.map((item, ind) => (
+                    <Grid key={ind} container item xs={6} direction="column">
+                      <div style={item} className="price-details">
+                        <div className="top-content" style={{ height: "60%" }}>
+                          <img src={thumbnailType[ind]} alt="" width={62} />
+                          <Typography variant="h6" gutterBottom>
+                            {labelTitles[ind]}
+                          </Typography>
+                        </div>
+                        <div
+                          className="bottom-content"
+                          style={{ height: "40%" }}
+                        >
+                          <p style={{ marginTop: "1rem" }}>
+                            {orderDonut[ind]} THB
+                          </p>
+                        </div>
+                      </div>
+                    </Grid>
+                  ))}
                 </Grid>
-                <Grid container item xs={6} direction="column">
-                  <div className="price-details"></div>
-                </Grid>
-                <Grid container item xs={6} direction="column">
-                  <div className="price-details"></div>
-                </Grid>
-                <Grid container item xs={6} direction="column">
-                  <div className="price-details"></div>
-                </Grid>
-                <Grid container item xs={6} direction="column">
-                  <div className="price-details"></div>
-                </Grid>
-                <Grid container item xs={6} direction="column">
-                  <div className="price-details"></div>
-                </Grid>
-              </Grid>
+              </div>
+            </div>
+          </div>
+
+          <div className="bar-chart">
+            <div className="bar-chart-head">
+              <div className="head-title">
+                <Typography variant="subtitle1" gutterBottom>
+                  Order Type / Month / Year
+                </Typography>
+              </div>
+              <div className="date-picker">
+                <FormControl>
+                  <RadioGroup
+                    row
+                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    defaultValue={"week"}
+                  >
+                    <FormControlLabel
+                      value="week"
+                      onChange={handleChange}
+                      control={<Radio />}
+                      label="Week"
+                    />
+                    <FormControlLabel
+                      value="month"
+                      onChange={handleChange}
+                      control={<Radio />}
+                      label="Month"
+                    />
+                    <FormControlLabel
+                      value="year"
+                      onChange={handleChange}
+                      control={<Radio />}
+                      label="Year"
+                    />
+                  </RadioGroup>
+                </FormControl>
+
+                {/* <div className="date-picker">
+                <DatePickerComponent
+                  state={true}
+                  setStartDate={setStartDate}
+                  setEndDate={setEndDate}
+                  label={"Start Date"}
+                  setDateDisable={setDateDisable}
+                  dateDisable={false}
+                  minDate={minDate}
+                  setMin={setMin}
+                  maxDate={maxDate}
+                  setMax={setMax}
+                />
+                --
+                <DatePickerComponent
+                  state={false}
+                  setStartDate={setStartDate}
+                  setEndDate={setEndDate}
+                  label={"End Date"}
+                  setDateDisable={setDateDisable}
+                  dateDisable={dateDisable}
+                  minDate={min}
+                  setMin={setMin}
+                  maxDate={max}
+                  setMax={setMax}
+                />
+              </div> */}
+              </div>
+            </div>
+
+            <div className="card-chart-control">
+              <div className="head-title">
+                <p>Wash&Dry</p>
+                <h3>{title}</h3>
+                <p>Total: {totalPriceWash} THB</p>
+              </div>
+              <div className="card-body">
+                <Chart
+                  colorRGB={"7, 148, 239, 1"}
+                  barTitle={"Wash&Dry"}
+                  mountChecked={mountChecked}
+                  setMountChecked={setMountChecked}
+                  orderDash={orderDash}
+                  setRefreshData={setRefreshData}
+                  refreshData={refreshData}
+                  views={views}
+                  startDate={startDate}
+                  endDate={endDate}
+                  setTotalPriceFood={setTotalPriceFood}
+                  setTotalPriceWash={setTotalPriceWash}
+                  setTotalPrice={setTotalPrice}
+                />
+              </div>
+            </div>
+            <div className="card-chart-control">
+              <div className="head-title">
+                <p>Vending&Cafe</p>
+                <h3>{title}</h3>
+                <p>Total: {totalPriceFood} THB</p>
+              </div>
+              <div className="card-body">
+                <Chart
+                  colorRGB={"255,144,41, 1"}
+                  barTitle={"Vending&Cafe"}
+                  mountChecked={mountChecked}
+                  setMountChecked={setMountChecked}
+                  orderDash={orderDash}
+                  refreshData={refreshData}
+                  setRefreshData={setRefreshData}
+                  views={views}
+                  dateStart={startDate}
+                  dateEnd={endDate}
+                  setTotalPriceFood={setTotalPriceFood}
+                  setTotalPriceWash={setTotalPriceWash}
+                  setTotalPrice={setTotalPrice}
+                />
+              </div>
+            </div>
+            <div className="card-chart-control">
+              <div className="head-title">
+                <p>Delivery</p>
+                <h3>{title}</h3>
+                <p>Total: {totalPrice} THB</p>
+              </div>
+              <div className="card-body">
+                <Chart
+                  colorRGB={"227,41,0, 1"}
+                  barTitle={"Delivery"}
+                  mountChecked={mountChecked}
+                  setMountChecked={setMountChecked}
+                  orderDash={orderDash}
+                  setRefreshData={setRefreshData}
+                  refreshData={refreshData}
+                  views={views}
+                  startDate={startDate}
+                  endDate={endDate}
+                  setTotalPriceFood={setTotalPriceFood}
+                  setTotalPriceWash={setTotalPriceWash}
+                  setTotalPrice={setTotalPrice}
+                />
+              </div>
             </div>
           </div>
         </div>
-
-        <div className="bar-chart">
-          <div className="bar-chart-head">
+        <div className="table-section">
+          <div className="header">
             <div className="head-title">
               <Typography variant="subtitle1" gutterBottom>
-                แสดงยอดแต่ละประเภท/เดือน/ปี
+                Order List
               </Typography>
             </div>
-            <div className="date-picker">
+            <div className="head-checkbox">
               <FormControl>
                 <RadioGroup
                   row
                   aria-labelledby="demo-row-radio-buttons-group-label"
                   name="row-radio-buttons-group"
-                  defaultValue={"week"}
+                  defaultValue={"all"}
                 >
                   <FormControlLabel
-                    value="week"
+                    value="all"
                     onChange={handleChange}
                     control={<Radio />}
-                    label="Week"
+                    label="All"
                   />
                   <FormControlLabel
-                    value="month"
+                    value="wash&dry"
                     onChange={handleChange}
                     control={<Radio />}
-                    label="Month"
+                    label="Wash&Dry"
                   />
                   <FormControlLabel
-                    value="year"
+                    value="food"
                     onChange={handleChange}
                     control={<Radio />}
-                    label="Year"
+                    label="Food"
+                  />
+                  <FormControlLabel
+                    value="iron"
+                    onChange={handleChange}
+                    control={<Radio />}
+                    label="Iron"
+                    disabled
+                  />
+                  <FormControlLabel
+                    value="fails"
+                    onChange={handleChange}
+                    control={<Radio />}
+                    label="Fails"
+                  />
+                  <FormControlLabel
+                    value="comlete"
+                    onChange={handleChange}
+                    control={<Radio />}
+                    label="Complete"
                   />
                 </RadioGroup>
               </FormControl>
-
-              {/* <DatePickerComponent
-            state={true}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
-            label={"Start Date"}
-            setDateDisable={setDateDisable}
-            dateDisable={false}
-            minDate={minDate}
-            setMin={setMin}
-            maxDate={maxDate}
-            setMax={setMax}
-          />
-          --
-          <DatePickerComponent
-            state={false}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
-            label={"End Date"}
-            setDateDisable={setDateDisable}
-            dateDisable={dateDisable}
-            minDate={min}
-            setMin={setMin}
-            maxDate={max}
-            setMax={setMax}
-          /> */}
+              {/* <FormGroup sx={{ flexDirection: "row" }}>
+                <FormControlLabel
+                  labelPlacement="end"
+                  control={<Checkbox defaultChecked />}
+                  label="All"
+                />
+                <FormControlLabel
+                  labelPlacement="end"
+                  control={<Checkbox />}
+                  label="Wash&Dry"
+                />
+                <FormControlLabel
+                  labelPlacement="end"
+                  control={<Checkbox disabled />}
+                  label="Iron"
+                />
+                <FormControlLabel
+                  labelPlacement="end"
+                  control={<Checkbox />}
+                  label="Food"
+                />
+                <FormControlLabel
+                  labelPlacement="end"
+                  control={<Checkbox />}
+                  label="Fails"
+                />
+                <FormControlLabel
+                  labelPlacement="end"
+                  control={<Checkbox />}
+                  label="Complete"
+                />
+              </FormGroup> */}
             </div>
           </div>
-
-          <div className="card-chart-control">
-            <div className="head-title">
-              <p>Wash&Dry</p>
-              <h3>{title}</h3>
-              <p>Total: {totalPriceWash} THB</p>
-            </div>
-            <div className="card-body">
-              <Chart
-                colorRGB={"7, 148, 239, 1"}
-                barTitle={"Wash&Dry"}
-                mountChecked={mountChecked}
-                setMountChecked={setMountChecked}
-                orderDash={orderDash}
-                setRefreshData={setRefreshData}
-                refreshData={refreshData}
-                views={views}
-                startDate={startDate}
-                endDate={endDate}
-                setTotalPriceFood={setTotalPriceFood}
-                setTotalPriceWash={setTotalPriceWash}
-                setTotalPrice={setTotalPrice}
-              />
-            </div>
+          <div className="price-details">
+            {orderListStyle.map((item, ind) => (
+              <div key={ind} className="details-list" style={item.style}>
+                <div className="content-left">
+                  <p>{item.title}</p>
+                  <Typography variant="subtitle2" gutterBottom>
+                    {orderList[ind]} {item.unit}
+                  </Typography>
+                </div>
+                <div className="content-right">
+                  <img src={item.thumbnail} alt="" width={40} />
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="card-chart-control">
-            <div className="head-title">
-              <p>Vending&Cafe</p>
-              <h3>{title}</h3>
-              <p>Total: {totalPriceFood} THB</p>
-            </div>
-            <div className="card-body">
-              <Chart
-                colorRGB={"255, 87, 51, 1"}
-                barTitle={"Vending&Cafe"}
-                mountChecked={mountChecked}
-                setMountChecked={setMountChecked}
-                orderDash={orderDash}
-                refreshData={refreshData}
-                setRefreshData={setRefreshData}
-                views={views}
-                dateStart={startDate}
-                dateEnd={endDate}
-                setTotalPriceFood={setTotalPriceFood}
-                setTotalPriceWash={setTotalPriceWash}
-                setTotalPrice={setTotalPrice}
-              />
-            </div>
-          </div>
-          <div className="card-chart-control">
-            <div className="head-title">
-              <p>Delivery</p>
-              <h3>{title}</h3>
-              <p>Total: {totalPrice} THB</p>
-            </div>
-            <div className="card-body">
-              <Chart
-                colorRGB={"33, 183, 23, 1"}
-                barTitle={"Delivery"}
-                mountChecked={mountChecked}
-                setMountChecked={setMountChecked}
-                orderDash={orderDash}
-                setRefreshData={setRefreshData}
-                refreshData={refreshData}
-                views={views}
-                startDate={startDate}
-                endDate={endDate}
-                setTotalPriceFood={setTotalPriceFood}
-                setTotalPriceWash={setTotalPriceWash}
-                setTotalPrice={setTotalPrice}
-              />
-            </div>
+          <div className="table-tab">
+            <TableTab orderList={orderListTable} />
           </div>
         </div>
       </div>
