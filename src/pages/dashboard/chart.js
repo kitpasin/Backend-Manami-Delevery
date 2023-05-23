@@ -56,7 +56,7 @@ const Chart = ({
               setTotalPriceWash(tt);
             }
           });
-        }, 500);
+        }, 200);
       } else if (barTitle === "Vending&Cafe") {
         setTimeout(() => {
           svGetOrderBar(start, end, "week").then((res) => {
@@ -78,7 +78,7 @@ const Chart = ({
               setTotalPriceFood(tt);
             }
           });
-        }, 500);
+        }, 200);
       } else if (barTitle === "Delivery") {
         setTimeout(() => {
           svGetOrderBar(start, end, "week").then((res) => {
@@ -96,7 +96,7 @@ const Chart = ({
               setTotalPrice(tt);
             }
           });
-        }, 500);
+        }, 200);
       }
     } else if (views === "month") {
       if (barTitle === "Wash&Dry") {
@@ -117,7 +117,7 @@ const Chart = ({
               setTotalPriceWash(tt);
             }
           });
-        }, 500);
+        }, 200);
       } else if (barTitle === "Vending&Cafe") {
         setTimeout(() => {
           svGetOrderBar(start, end, "month").then((res) => {
@@ -136,7 +136,7 @@ const Chart = ({
               setTotalPriceFood(tt);
             }
           });
-        }, 500);
+        }, 200);
       } else if (barTitle === "Delivery") {
         setTimeout(() => {
           svGetOrderBar(start, end, "month").then((res) => {
@@ -151,7 +151,7 @@ const Chart = ({
               setTotalPrice(tt);
             }
           });
-        }, 500);
+        }, 200);
       }
     } else if (views === "year") {
       if (barTitle === "Wash&Dry") {
@@ -171,7 +171,7 @@ const Chart = ({
               setTotalPriceWash(tt);
             }
           });
-        }, 500);
+        }, 200);
       } else if (barTitle === "Vending&Cafe") {
         setTimeout(() => {
           svGetOrderBar(start, end, "year").then((res) => {
@@ -189,7 +189,7 @@ const Chart = ({
               setTotalPriceFood(tt);
             }
           });
-        }, 500);
+        }, 200);
       } else if (barTitle === "Delivery") {
         setTimeout(() => {
           svGetOrderBar(start, end, "year").then((res) => {
@@ -203,7 +203,7 @@ const Chart = ({
               setTotalPrice(tt);
             }
           });
-        }, 500);
+        }, 200);
       }
     }
   }, [views, refreshData]);

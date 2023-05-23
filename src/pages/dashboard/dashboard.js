@@ -167,7 +167,7 @@ const DashboardPage = () => {
     } else if (views === "year") {
       setTitle("2023");
     }
-    svGetOrderBar(startDate, endDate).then((res) => {
+    svGetOrderBar(startDate, endDate, "").then((res) => {
       if (res.status) {
         setOrderDash(res.data);
       }
@@ -191,7 +191,6 @@ const DashboardPage = () => {
       let orderFails = 0;
       if (res.status) {
         res.data?.map((item, ind) => {
-          orderComplete += 1;
           if (item.status_id === 4) {
             if (item.type_order === "washing") {
               ttWash += item.washing_price;
@@ -201,6 +200,7 @@ const DashboardPage = () => {
             } else {
               ttIron += item.total_price;
             }
+            orderComplete += 1;
             ttDelivery += item.delivery_price;
           } else if (item.status_id === 5) {
             orderFails += 1;

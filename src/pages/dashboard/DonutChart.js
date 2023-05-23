@@ -5,7 +5,6 @@ function DonutChart({ data, labelTitles }) {
   const colors = ["#005EA0", "#145C67", "#FF7D00", "#33AAFF", "#78290F"];
   const labels = labelTitles?.filter((item) => item !== "Total");
 
-  console.log(data)
   return (
     <React.Fragment>
       <Chart
