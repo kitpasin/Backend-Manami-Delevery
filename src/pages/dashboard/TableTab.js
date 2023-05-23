@@ -182,7 +182,6 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function TableTab({ orderList }) {
-  console.log(orderList);
 
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");

@@ -157,6 +157,7 @@
         .bar-chart-head {
             display: flex;
             justify-content: space-between;
+            // align-items: center;
 
             @media screen and (max-width: 1290px) {
                 flex-direction: column;

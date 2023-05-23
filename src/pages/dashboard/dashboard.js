@@ -18,26 +18,18 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ButtonUI from "../../components/ui/button/button";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
 import OrderTable from "./order-tab";
-import { getBookingList } from "../../services/booking.service";
 import { appActions } from "../../store/app-slice";
-import BookingSettings from "./settings";
-import { svGetOrders, svGetOrderPending } from "../../services/orders.service";
 import Chart from "./chart";
 import DatePickerComponent from "./DatePicker";
 import { svGetOrderBar } from "../../services/dashboard.service";
 import DonutChart from "./DonutChart";
 import TableTab from "./TableTab";
-import {
-  svGetOrderDonut,
-  svGetOrderTable,
-} from "../../services/dashboard.service";
+import { svGetOrderDonut } from "../../services/dashboard.service";
 
 const DashboardPage = () => {
   const { t } = useTranslation(["dashboard-page"]);
   const dispatch = useDispatch();
   const [refreshData, setRefreshData] = useState(0);
-  const [orderData, setOrderData] = useState([]);
-  const [filteredData, setFIlteredData] = useState([]);
   const [settings, setSettings] = useState({
     numberPeople: 1,
     timesAvailable: "",
@@ -45,28 +37,29 @@ const DashboardPage = () => {
     disabledDate: "",
     disabledHoliday: "",
   });
-  const [year, setYear] = useState(dayjs());
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [dateDisable, setDateDisable] = useState(true);
   const [totalPriceWash, setTotalPriceWash] = useState(0);
   const [totalPriceFood, setTotalPriceFood] = useState(0);
-  const [deliveryPrice, setDeliveryPrice] = useState(0);
   const [mountChecked, setMountChecked] = useState(true);
   const [orderDash, setOrderDash] = useState([]);
-  const [min, setMin] = useState("");
-  const [max, setMax] = useState("");
-
   const [totalPrice, setTotalPrice] = useState(0);
-
-  const minDate = dayjs("2023-01-01");
-  const maxDate = minDate.add(10, "year");
   const [views, setViews] = useState("week");
   const [viewsList, setViewsList] = useState("all");
   const [title, setTitle] = useState("");
   const [orderDonut, setOrderDonut] = useState([]);
+  const [donut, setDonut] = useState([]);
   const [orderList, setOrderList] = useState([]);
   const [orderListTable, setOrderListTable] = useState([]);
+  const [dateTitle, setDateTitle] = useState("");
+
+  function setDate() {
+    let date = dayjs().get("date");
+    let month = new Date().toLocaleString("default", { month: "long" });
+    let year = dayjs().get("year");
+    let dd = date + " " + month + " " + year;
+    setDateTitle(dd);
+  }
 
   // useEffect(() => {
   //   let ttWash = 0;
@@ -187,6 +180,7 @@ const DashboardPage = () => {
       let priceDetails = [];
       let listDetails = [];
       let orderTable = [];
+      let donutArr = [];
       let ttWash = 0;
       let ttDry = 0;
       let ttFoods = 0;
@@ -196,7 +190,6 @@ const DashboardPage = () => {
       let orderComplete = 0;
       let orderFails = 0;
       if (res.status) {
-        console.log(res.data);
         res.data?.map((item, ind) => {
           orderComplete += 1;
           if (item.status_id === 4) {
@@ -209,13 +202,13 @@ const DashboardPage = () => {
               ttIron += item.total_price;
             }
             ttDelivery += item.delivery_price;
-            ttAll = ttDelivery + ttWash + ttDry + ttFoods;
           } else if (item.status_id === 5) {
             orderFails += 1;
           }
           if (item.status_id === 4 || item.status_id === 5) {
             orderTable.push(item);
           }
+          ttAll = ttDelivery + ttWash + ttDry + ttFoods;
         });
         priceDetails.push(ttWash);
         priceDetails.push(ttDry);
@@ -223,6 +216,9 @@ const DashboardPage = () => {
         priceDetails.push(ttIron);
         priceDetails.push(ttDelivery);
         priceDetails.push(ttAll);
+        donutArr = priceDetails.filter(
+          (item, ind) => ind !== priceDetails.length - 1
+        );
 
         listDetails.push(orderComplete);
         listDetails.push(orderFails);
@@ -233,15 +229,12 @@ const DashboardPage = () => {
         setOrderDonut(priceDetails);
         setOrderList(listDetails);
         setOrderListTable(orderTable);
-
-        console.log(orderListTable);
+        setDonut(donutArr);
       }
       dispatch(appActions.isSpawnActive(false));
     });
 
-    // svGetOrderList().then((res) => {
-    //   console.log(res.data);
-    // });
+    setDate();
   }, [refreshData]);
 
   useEffect(() => {
@@ -262,7 +255,7 @@ const DashboardPage = () => {
           data = res.data?.filter((item) => item.status_id === 4);
         }
       }
-      setOrderListTable(data)
+      setOrderListTable(data);
     });
   }, [viewsList]);
 
@@ -291,35 +284,35 @@ const DashboardPage = () => {
     "Washing",
     "Drying",
     "Food",
-    "Iron",
+    "Ironing",
     "Delivery",
     "Total",
   ];
 
   const detailsStyle = [
     {
-      backgroundColor: "rgb(3,0,171)",
-      boxShadow: "-1px 20px 20px 0px rgba(3,0,171, 0.2)",
+      backgroundColor: "rgb(0, 94, 160)",
+      boxShadow: "-1px 20px 20px 0px rgba(0, 94, 160, 0.2)",
     },
     {
-      backgroundColor: "rgb(22,156,231)",
-      boxShadow: "-1px 20px 20px 0px rgba(22,156,231, 0.4)",
+      backgroundColor: "rgb(20, 92, 103)",
+      boxShadow: "-1px 20px 20px 0px rgba(20, 92, 103, 0.4)",
     },
     {
-      backgroundColor: "rgb(255,144,41)",
-      boxShadow: "-1px 20px 20px 0px rgba(255,144,41, 0.4)",
+      backgroundColor: "rgb(255, 125, 0)",
+      boxShadow: "-1px 20px 20px 0px rgba(255, 125, 0, 0.4)",
     },
     {
-      backgroundColor: "rgb(15,185,0)",
-      boxShadow: "-1px 20px 20px 0px rgba(15,185,0, 0.4)",
+      backgroundColor: "rgb(51, 170, 255)",
+      boxShadow: "-1px 20px 20px 0px rgba(51, 170, 255, 0.4)",
     },
     {
-      backgroundColor: "rgb(227,41,0)",
-      boxShadow: "-1px 20px 20px 0px rgba(227,41,0, 0.4)",
+      backgroundColor: "rgb(120, 41, 15)",
+      boxShadow: "-1px 20px 20px 0px rgba(120, 41, 15, 0.4)",
     },
     {
-      backgroundColor: "rgb(255,89,159)",
-      boxShadow: "-1px 20px 20px 0px rgba(255,89,159, 0.4)",
+      backgroundColor: "rgb(137, 0, 58)",
+      boxShadow: "-1px 20px 20px 0px rgba(137, 0, 58, 0.4)",
     },
   ];
 
@@ -391,12 +384,12 @@ const DashboardPage = () => {
                 Order Type / Day
               </Typography>
               <Typography variant="h6" gutterBottom>
-                22 May 2023
+                {dateTitle}
               </Typography>
             </div>
             <div className="chart-content">
               <div className="content-left">
-                <DonutChart data={orderDonut} labelTitles={labelTitles} />
+                <DonutChart data={donut} labelTitles={labelTitles} />
               </div>
               <div className="content-right">
                 <Grid container columnSpacing={2} rowSpacing={6}>
@@ -427,8 +420,12 @@ const DashboardPage = () => {
 
           <div className="bar-chart">
             <div className="bar-chart-head">
-              <div className="head-title">
-                <Typography variant="subtitle1" gutterBottom>
+              <div
+                className="head-title"
+                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              >
+                <img src="images/dashboard/barchart.png" alt="" width={30} />
+                <Typography variant="subtitle1" gutterBottom sx={{ mb: "0" }}>
                   Order Type / Month / Year
                 </Typography>
               </div>
@@ -499,7 +496,7 @@ const DashboardPage = () => {
               </div>
               <div className="card-body">
                 <Chart
-                  colorRGB={"7, 148, 239, 1"}
+                  colorRGB={"0, 94, 160, 1"}
                   barTitle={"Wash&Dry"}
                   mountChecked={mountChecked}
                   setMountChecked={setMountChecked}
@@ -523,7 +520,7 @@ const DashboardPage = () => {
               </div>
               <div className="card-body">
                 <Chart
-                  colorRGB={"255,144,41, 1"}
+                  colorRGB={"255, 125, 0, 1"}
                   barTitle={"Vending&Cafe"}
                   mountChecked={mountChecked}
                   setMountChecked={setMountChecked}
@@ -547,7 +544,7 @@ const DashboardPage = () => {
               </div>
               <div className="card-body">
                 <Chart
-                  colorRGB={"227,41,0, 1"}
+                  colorRGB={"120, 41, 15, 1"}
                   barTitle={"Delivery"}
                   mountChecked={mountChecked}
                   setMountChecked={setMountChecked}
@@ -567,8 +564,12 @@ const DashboardPage = () => {
         </div>
         <div className="table-section">
           <div className="header">
-            <div className="head-title">
-              <Typography variant="subtitle1" gutterBottom>
+            <div
+              className="head-title"
+              style={{ display: "flex", gap: ".5rem" }}
+            >
+              <img src="images/dashboard/orderlist.png" alt="" width={30} />
+              <Typography variant="subtitle1" gutterBottom sx={{ mb: "0" }}>
                 Order List
               </Typography>
             </div>
@@ -599,10 +600,10 @@ const DashboardPage = () => {
                     label="Food"
                   />
                   <FormControlLabel
-                    value="iron"
+                    value="ironing"
                     onChange={handleChange}
                     control={<Radio />}
-                    label="Iron"
+                    label="Ironing"
                     disabled
                   />
                   <FormControlLabel

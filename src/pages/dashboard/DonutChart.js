@@ -2,7 +2,9 @@ import React from "react";
 import Chart from "react-apexcharts";
 
 function DonutChart({ data, labelTitles }) {
-  const colors = ["#0300AB", "#169CE7", "#FF9029", "#0fb900", "#E32900", "#FF599F"];
+  const colors = ["#005EA0", "#145C67", "#FF7D00", "#33AAFF", "#78290F"];
+  const labels = labelTitles?.filter((item) => item !== "Total");
+
   console.log(data)
   return (
     <React.Fragment>
@@ -16,7 +18,7 @@ function DonutChart({ data, labelTitles }) {
           chart: {
             // width: "100%"
           },
-          labels: labelTitles,
+          labels: labels,
 
           plotOptions: {
             pie: {
@@ -24,7 +26,7 @@ function DonutChart({ data, labelTitles }) {
                 labels: {
                   show: true,
                   total: {
-                    show: false,
+                    show: true,
                     showAlways: false,
                   },
                 },

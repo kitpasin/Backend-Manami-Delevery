@@ -316,7 +316,7 @@ const Chart = ({
       labels,
       datasets: [
         {
-          label: null,
+          label: "Total ",
           data: labels.map((item, ind) => {
             let tt = 0;
             for (let i of orderBar) {
