@@ -2,26 +2,24 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
-import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
-
-import "./dashboard.scss";
 import { faGamepad, faRedo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import FormGroup from "@mui/material/FormGroup";
+import Checkbox from "@mui/material/Checkbox";
+import FormLabel from "@mui/material/FormLabel";
+
+import "./dashboard.scss";
+import DatePickerComponent from "./DatePicker";
 import ButtonUI from "../../components/ui/button/button";
 import HeadPageComponent from "../../components/layout/headpage/headpage";
-import OrderTable from "./order-tab";
 import { appActions } from "../../store/app-slice";
 import Chart from "./chart";
-import DatePickerComponent from "./DatePicker";
-import { svGetOrderBar } from "../../services/dashboard.service";
 import DonutChart from "./DonutChart";
 import TableTab from "./TableTab";
 import { svGetOrderDonut } from "../../services/dashboard.service";
@@ -42,7 +40,6 @@ const DashboardPage = () => {
   const [totalPriceWash, setTotalPriceWash] = useState(0);
   const [totalPriceFood, setTotalPriceFood] = useState(0);
   const [mountChecked, setMountChecked] = useState(true);
-  const [orderDash, setOrderDash] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [views, setViews] = useState("week");
   const [viewsList, setViewsList] = useState("all");
@@ -61,100 +58,6 @@ const DashboardPage = () => {
     setDateTitle(dd);
   }
 
-  // useEffect(() => {
-  //   let ttWash = 0;
-  //   let ttFood = 0;
-  //   let delivery_price = 0;
-  //   // svGetOrderDash(year.$y).then((res) => {
-  //   //   const order_data = res.data?.map((d) => {
-  //   //     d.type_order == "washing"
-  //   //       ? (ttWash += d.total_price)
-  //   //       : (ttFood += d.total_price);
-  //   //     delivery_price += d.delivery_price;
-  //   //     return {
-  //   //       orders_number: d.orders_number,
-  //   //       delivery_drop_address: d.delivery_drop_address,
-  //   //       delivery_drop_address_more: d.delivery_drop_address_more,
-  //   //       delivery_pickup_address: d.delivery_pickup_address,
-  //   //       delivery_pickup_address_more: d.delivery_pickup_address_more,
-  //   //       details: d.details,
-  //   //       phone_number: d.phone_number,
-  //   //       status: d.status_name,
-  //   //       transaction_date: d.transaction_date,
-  //   //       shipping_date: d.shipping_date,
-  //   //       type_order: d.type_order,
-  //   //       date_pickup: d.date_pickup,
-  //   //       date_drop: d.date_drop,
-  //   //       pickup_image: d.pickup_image,
-  //   //       drop_image: d.drop_image,
-  //   //       member_name: d.member_name,
-  //   //       branch_name: d.branch_name,
-  //   //       branch_id: d.branch_id,
-  //   //       delivery_pickup: d.delivery_pickup,
-  //   //       delivery_drop: d.delivery_drop,
-  //   //       status_id: d.status_id,
-  //   //       id: d.id,
-  //   //       total_price: d.total_price,
-  //   //     };
-  //   //   });
-  //   //   // orderData?.map((item) => {
-  //   //   //   item.type_order == "washing"
-  //   //   //     ? (ttWash += item.total_price)
-  //   //   //     : (ttFood += item.total_price);
-  //   //   //   delivery_price += item.delivery_price;
-  //   //   // });
-  //   //   setTotalPriceWash(ttWash);
-  //   //   setTotalPriceFood(ttFood);
-  //   //   setDeliveryPrice(delivery_price);
-  //   //   setOrderDash(order_data);
-  //   // });
-  // }, [mountChecked, refreshData]);
-
-  // useEffect(() => {
-  //   dispatch(appActions.isSpawnActive(true));
-  //   svGetOrders("").then((res) => {
-  //     if (res.status) {
-  //       const order_data = res.data?.map((d) => {
-  //         return {
-  //           orders_number: d.orders_number,
-  //           delivery_drop_address: d.delivery_drop_address,
-  //           delivery_drop_address_more: d.delivery_drop_address_more,
-  //           delivery_pickup_address: d.delivery_pickup_address,
-  //           delivery_pickup_address_more: d.delivery_pickup_address_more,
-  //           details: d.details,
-  //           phone_number: d.phone_number,
-  //           status: d.status_name.toLowerCase(),
-  //           transaction_date: d.transaction_date,
-  //           shipping_date: d.shipping_date,
-  //           type_order: d.type_order,
-  //           date_pickup: d.date_pickup,
-  //           date_drop: d.date_drop,
-  //           pickup_image: d.pickup_image,
-  //           drop_image: d.drop_image,
-  //           member_name: d.member_name,
-  //           branch_name: d.branch_name,
-  //           branch_id: d.branch_id,
-  //           delivery_pickup: d.delivery_pickup,
-  //           delivery_drop: d.delivery_drop,
-  //           status_id: d.status_id,
-  //           id: d.id,
-  //           total_price: d.total_price,
-  //         };
-  //       });
-  //     } else {
-  //       // setOrdersData([]);
-  //     }
-  //     dispatch(appActions.isSpawnActive(false));
-  //   });
-  // }, [refreshData]);
-
-  // const filterData = () => {
-  //   const filted = orderData.filter((f) => {
-  //     return f;
-  //   });
-  //   setFIlteredData(filted);
-  // };
-
   useEffect(() => {
     if (views === "week") {
       setStartDate(dayjs().subtract(6, "day").toISOString().substring(0, 10));
@@ -167,11 +70,6 @@ const DashboardPage = () => {
     } else if (views === "year") {
       setTitle("2023");
     }
-    svGetOrderBar(startDate, endDate, "").then((res) => {
-      if (res.status) {
-        setOrderDash(res.data);
-      }
-    });
   }, [views]);
 
   useEffect(() => {
@@ -498,9 +396,7 @@ const DashboardPage = () => {
                 <Chart
                   colorRGB={"0, 94, 160, 1"}
                   barTitle={"Wash&Dry"}
-                  mountChecked={mountChecked}
                   setMountChecked={setMountChecked}
-                  orderDash={orderDash}
                   setRefreshData={setRefreshData}
                   refreshData={refreshData}
                   views={views}
@@ -522,9 +418,7 @@ const DashboardPage = () => {
                 <Chart
                   colorRGB={"255, 125, 0, 1"}
                   barTitle={"Vending&Cafe"}
-                  mountChecked={mountChecked}
                   setMountChecked={setMountChecked}
-                  orderDash={orderDash}
                   refreshData={refreshData}
                   setRefreshData={setRefreshData}
                   views={views}
@@ -546,9 +440,7 @@ const DashboardPage = () => {
                 <Chart
                   colorRGB={"120, 41, 15, 1"}
                   barTitle={"Delivery"}
-                  mountChecked={mountChecked}
                   setMountChecked={setMountChecked}
-                  orderDash={orderDash}
                   setRefreshData={setRefreshData}
                   refreshData={refreshData}
                   views={views}

@@ -16,13 +16,9 @@ import { svGetOrderBar } from "../../services/dashboard.service";
 const Chart = ({
   colorRGB,
   barTitle,
-  mountChecked,
   refreshData,
   setRefreshData,
-  orderDash,
   views,
-  dateEnd,
-  dateStart,
   setTotalPriceWash,
   setTotalPriceFood,
   setTotalPrice,
