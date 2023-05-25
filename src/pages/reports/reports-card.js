@@ -14,9 +14,11 @@ import {
   MenuItem,
   TablePagination,
   TextField,
+  Box,
   Radio,
   RadioGroup,
   FormControlLabel,
+  Modal,
 } from "@mui/material";
 import { t } from "i18next";
 import React, { useEffect, useState } from "react";
@@ -25,14 +27,7 @@ import ExcelJS from "exceljs";
 import saveAs from "file-saver";
 import ReportsTab from "./reports-tab";
 
-const ReportsCard = ({
-  items,
-  dateValue,
-  monthValue,
-  yearValue,
-  startDate,
-  endDate,
-}) => {
+const ReportsCard = ({ items, dateValue, monthValue, yearValue, startDate, endDate }) => {
   const [summaryValues, setSummaryValues] = useState({
     num: 0,
     productPrice: 0,
@@ -41,7 +36,6 @@ const ReportsCard = ({
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-
 
   const [filteredItems, setFilteredItems] = useState([]);
 
@@ -127,7 +121,6 @@ const ReportsCard = ({
   const indexOfFirstItem = indexOfLastItem - rowsPerPage;
   const displayedItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
-
   const handleChangeSelect = (event) => {
     const selectedId = event.target.value;
     const result = items.filter((item) => item.type_order === selectedId);
@@ -135,9 +128,9 @@ const ReportsCard = ({
     setSelectedOrderTypeId(selectedId); // Update the selected category ID state
     if (selectedId !== "washing") {
       setWadType("all");
-      setPage(0)
+      setPage(0);
     } else {
-      setPage(0)
+      setPage(0);
     }
   };
 
@@ -222,6 +215,22 @@ const ReportsCard = ({
       });
       saveAs(blob, `Reports.xlsx`);
     });
+  };
+
+  const [selectedOrdersNumber, setSelectedOrdersNumber] = useState(null);
+  const [selectedProductsName, setSelectedProductsName] = useState(null);
+  const [selectedTypesOrder, setSelectedTypesOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleTableRowClick = (ordersNumber, productsName, typesOrder) => {
+    setSelectedOrdersNumber(ordersNumber);
+    setSelectedProductsName(productsName);
+    setSelectedTypesOrder(typesOrder);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -316,7 +325,6 @@ const ReportsCard = ({
           )}
         </Table>
       </TableContainer>
-
       <TableContainer component={Paper} className="card-desktop">
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -333,7 +341,14 @@ const ReportsCard = ({
           </TableHead>
           <TableBody>
             {displayedItems.map((row, index) => (
-              <TableRow key={index} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+              <TableRow
+                key={index}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                style={{ cursor: "pointer" }}
+                onClick={() =>
+                  handleTableRowClick(row.orders_number, row.product_name, row.type_order)
+                }
+              >
                 <TableCell align="left">{row.orders_number}</TableCell>
                 <TableCell align="left">{row.member_name}</TableCell>
                 <TableCell align="left">{row.branch_name}</TableCell>
@@ -373,6 +388,68 @@ const ReportsCard = ({
               </TableRow>
             ))}
           </TableBody>
+          <Modal
+            open={isModalOpen}
+            onClose={handleCloseModal}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+          >
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                bgcolor: "background.paper",
+                boxShadow: 24,
+                p: 4,
+                outline: "none",
+                maxWidth: 768,
+                borderRadius: "10px",
+              }}
+            >
+              <div
+                id="modal-title"
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  gap: "0.25rem",
+                  fontSize: "20px",
+                }}
+              >
+                <p style={{ fontWeight: "bold" }}>Orders Number :</p>
+                <p>{selectedOrdersNumber}</p>
+              </div>
+              <div
+                id="modal-description"
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  gap: "0.25rem",
+                  fontSize: "20px",
+                  width: "100%",
+                }}
+              >
+                <div>
+                  <p style={{ fontWeight: "bold" }}>Product : </p>
+                </div>
+                <div>
+                  {selectedTypesOrder && selectedTypesOrder === "washing" ? (
+                    <p>
+                      Washing {selectedProductsName[0]} {selectedProductsName[1]}, Drying{" "}
+                      {selectedProductsName[2]}
+                    </p>
+                  ) : selectedProductsName && selectedProductsName.length > 1 ? (
+                    <p style={{ maxWidth: "360px" }}>{selectedProductsName.join(", ")}</p>
+                  ) : (
+                    <p style={{ maxWidth: "360px" }}>{selectedProductsName}</p>
+                  )}
+                </div>
+              </div>
+            </Box>
+          </Modal>
         </Table>
       </TableContainer>
       <TablePagination

@@ -52,7 +52,8 @@ const Reports = () => {
             washing_price : d.washing_price,
             drying_price : d.drying_price,
             total_price: d.total_price,
-            delivery_price: d.delivery_price
+            delivery_price: d.delivery_price,
+            product_name : d.product_name
           };
         });
         setReportsData(report_data);
@@ -72,6 +73,8 @@ const Reports = () => {
     
     onFetchOrderData();
   }, [refreshData, language, tabSelect]);
+
+  console.log(reportsData)
 
   return (
     <section id="reports-page">
