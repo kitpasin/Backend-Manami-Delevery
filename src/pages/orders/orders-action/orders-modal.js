@@ -632,7 +632,7 @@ const OrdersModal = ({
                             }
                           >
                             <img
-                              src={`${uploadPath + orderShow.pickup_image}`}
+                              src={orderShow.pickup_image ? `${uploadPath + orderShow.pickup_image}` : ""}
                               alt=""
                               onError={(e) => imageError(e, "pickup")}
                             />
@@ -652,7 +652,7 @@ const OrdersModal = ({
                           }
                         >
                           <img
-                            src={`${uploadPath + orderShow.drop_image}`}
+                            src={orderShow.drop_image ? `${uploadPath + orderShow.drop_image}` : ""}
                             alt=""
                             onError={(e) => imageError(e, "drop")}
                           />

@@ -28,6 +28,7 @@ const OrdersCard = ({ items, editHandler, deleteHandler }) => {
               <TableCell align="left">Type Order</TableCell>
               <TableCell align="left">Status</TableCell>
               <TableCell align="left">Transaction Date</TableCell>
+              <TableCell align="left">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -42,8 +43,8 @@ const OrdersCard = ({ items, editHandler, deleteHandler }) => {
                 <TableCell align="left">{row.orders_number}</TableCell>
                 <TableCell align="left">{row.member_name}</TableCell>
                 <TableCell align="left">{row.branch_name}</TableCell>
-                <TableCell align="center">{row.type_order}</TableCell>
-                <TableCell align="center">
+                <TableCell align="left">{row.type_order}</TableCell>
+                <TableCell align="left">
                   <Chip
                     label={row.status}
                     size="small"
@@ -63,7 +64,7 @@ const OrdersCard = ({ items, editHandler, deleteHandler }) => {
                 <TableCell align="left">
                   <DateMoment format={"LLL"} date={row.transaction_date} />
                 </TableCell>
-                <TableCell align="center" className="column-action">
+                <TableCell align="left" className="column-action">
                   <ButtonUI
                     onClick={(e) =>
                       editHandler(row.orders_number, row.type_order)

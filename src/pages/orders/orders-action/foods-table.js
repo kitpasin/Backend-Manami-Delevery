@@ -3,10 +3,12 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow
+  TableRow,
 } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
+
+import ButtonUI from "../../../components/ui/button/button";
 
 const FoodsTable = ({ orderList }) => {
   const uploadPath = useSelector((state) => state.app.uploadPath);
@@ -39,15 +41,12 @@ const FoodsTable = ({ orderList }) => {
             <TableRow
               sx={{
                 "&:last-child td, &:last-child th": {
-                  border: 0
-                }
+                  border: 0,
+                },
               }}
             >
               <TableCell align="left">{++index}</TableCell>
-              <TableCell
-                className="product-image"
-                align="center"
-              >
+              <TableCell className="product-image" align="center">
                 <figure>
                   <img
                     src={`${uploadPath + row.thumbnail_link}`}
@@ -62,7 +61,26 @@ const FoodsTable = ({ orderList }) => {
               <TableCell align="left">{row.microwave_name}</TableCell>
               <TableCell align="left">{row.sweetness_name}</TableCell>
               <TableCell align="left">{row.requirements}</TableCell>
-              <TableCell align="center"></TableCell>
+              <TableCell align="center">
+                <ButtonUI
+                  style={{minWidth: "65px"}}
+                  onClick={(e) => console.log("click")}
+                  on="show"
+                  className="btn-custom onShow"
+                  width="small"
+                >
+                  Edit
+                </ButtonUI>
+                <ButtonUI
+                  style={{minWidth: "65px"}}
+                  onClick={(e) => console.log("click")}
+                  on="delete"
+                  className="btn-custom onDelete"
+                  icon=""
+                >
+                  Delete
+                </ButtonUI>
+              </TableCell>
             </TableRow>
           </React.Fragment>
         ))}
