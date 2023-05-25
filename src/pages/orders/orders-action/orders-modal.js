@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import ButtonUI from "../../../components/ui/button/button";
 import { useSelector, useDispatch } from "react-redux";
+import Button from '@mui/material/Button';
 
 import "./orders-modal.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -766,7 +767,7 @@ const OrdersModal = ({
                         setApproveForm={setApproveForm}
                       />
                     ) : (
-                      <FoodsTable orderList={orderShow.orderList} />
+                      <FoodsTable orderList={orderShow.orderList} orderShow={orderShow} />
                     )}
                   </div>
                 </Box>
