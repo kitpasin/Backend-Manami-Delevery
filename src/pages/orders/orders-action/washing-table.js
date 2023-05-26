@@ -26,6 +26,7 @@ const WashingTable = ({ orderList, showDialog, setShowDialog, setApproveForm }) 
     })
     setShowDialog(true)
   }
+
   return (
     <Table
       sx={{ minWidth: 650 }}

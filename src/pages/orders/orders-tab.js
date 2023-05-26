@@ -17,6 +17,7 @@ import SwalUI from "../../components/ui/swal-ui/swal-ui";
 import OrdersModal from "./orders-action/orders-modal";
 import OrdersCard from "./orders-card";
 import OrdersCardMobile from "./orders-card-mobile";
+import PDFFile from "./orders-action/pdffile";
 
 const OrdersTab = ({
   ordersModal,
@@ -171,6 +172,7 @@ const OrdersTab = ({
       setFilteredData(result.slice(limited.begin, limited.end));
     }
   }, [tabSelect, ordersData, page, rowsPerPage]);
+
   return (
     <Fragment>
       <Box className="orders-tab-section" sx={{ width: "100%" }}>
@@ -194,14 +196,20 @@ const OrdersTab = ({
             </TabList>
           </Box>
           {tabLists.map((tab) => (
-            <TabPanel
-              className={`orders-tab-body asRow`}
-              value={tab.value}
-              key={tab.value}
-            >
+            <TabPanel className={`orders-tab-body asRow`} value={tab.value} key={tab.value}>
               <div className="item-list">
-                <OrdersCard items={filteredData} setOrdersModal={setOrdersModal} editHandler={editHandler} deleteHandler={deleteHandler}/>
-                <OrdersCardMobile items={filteredData} setOrdersModal={setOrdersModal} editHandler={editHandler} deleteHandler={deleteHandler}/>
+                <OrdersCard
+                  items={filteredData}
+                  setOrdersModal={setOrdersModal}
+                  editHandler={editHandler}
+                  deleteHandler={deleteHandler}
+                />
+                <OrdersCardMobile
+                  items={filteredData}
+                  setOrdersModal={setOrdersModal}
+                  editHandler={editHandler}
+                  deleteHandler={deleteHandler}
+                />
               </div>
               <TablePagination
                 component="div"
@@ -215,7 +223,7 @@ const OrdersTab = ({
           ))}
         </TabContext>
       </Box>
-      {(
+      {
         <OrdersModal
           orderShow={orderShow}
           setRefreshData={setRefreshData}
@@ -225,7 +233,7 @@ const OrdersTab = ({
           isWashing={isWashing}
           editHandler={editHandler}
         />
-      )}
+      }
     </Fragment>
   );
 };
