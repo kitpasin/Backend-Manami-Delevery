@@ -89,6 +89,7 @@ const OrdersModal = ({
     product_id: null,
     cart_number: 0,
     page_id: 0,
+    add_price: 0,
   });
 
   const imageError = (e, type) => {
@@ -262,7 +263,6 @@ const OrdersModal = ({
   };
 
   const handleValidateWashing = () => {
-    if (!approveForm.weight) return false;
     svVerifiedItem(approveForm)
       .then((res) => {
         setRefreshData(refreshData + 1);
@@ -762,6 +762,7 @@ const OrdersModal = ({
                   >
                     {isWashing ? (
                       <WashingTable
+                        orderShow={orderShow}
                         orderList={orderShow.orderList}
                         showDialog={showDialog}
                         setShowDialog={setShowDialog}
@@ -769,7 +770,7 @@ const OrdersModal = ({
                         setOrderShow={setOrderShow}
                       />
                     ) : (
-                      <FoodsTable orderList={orderShow.orderList} orderShow={orderShow} setOrderShow={setOrderShow} />
+                      <FoodsTable orderShow={orderShow} orderList={orderShow.orderList} setOrderShow={setOrderShow} />
                     )}
                   </div>
                 </Box>
@@ -875,6 +876,8 @@ const ApproveModel = ({
       return {
         ...prev,
         product_id: e.target.value,
+        weight: "",
+        add_price: diff,
       };
     });
     setCapaId(e.target.value);
@@ -890,7 +893,7 @@ const ApproveModel = ({
       aria-describedby="alert-dialog-description"
       className="dialog"
     >
-      <div className="details">
+      {/* <div className="details">
         <FormControl error={!!!approveForm.weight} variant="standard">
           <InputLabel htmlFor={`weight`}>Weight (kg)</InputLabel>
           <Input
@@ -905,7 +908,7 @@ const ApproveModel = ({
             }
           />
         </FormControl>
-      </div>
+      </div> */}
 
       <div className="details">
         <FormControl variant="standard">
@@ -932,10 +935,10 @@ const ApproveModel = ({
       </div>
 
       <div className="details">
-        {diff > 0 && (
+        {diff !== 0 && (
           <Chip
-            label={`+ ${diff} ${currency}`}
-            color="success"
+            label={diff > 0 ?`+ ${diff} ${currency}`: `${diff} ${currency}`}
+            color={diff > 0 ?"success":"error"}
             variant="outlined"
           />
         )}
