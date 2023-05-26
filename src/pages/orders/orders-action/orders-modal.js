@@ -2,13 +2,12 @@ import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import ButtonUI from "../../../components/ui/button/button";
 import { useSelector, useDispatch } from "react-redux";
-import Button from '@mui/material/Button';
-
 import "./orders-modal.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAdd,
   faArrowRightFromBracket,
+  faBook,
   faCheck,
   faMapLocationDot,
   faRandom,
@@ -25,6 +24,7 @@ import {
   Modal,
   Input,
   Select,
+  Button,
 } from "@mui/material";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers";
@@ -44,6 +44,8 @@ import {
 } from "../../../services/orders.service";
 import { svProductCapacity } from "../../../services/product.service";
 import { appActions } from "../../../store/app-slice";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PDFFile from "./pdffile";
 
 const OrdersModal = ({
   isOpen,
@@ -77,9 +79,7 @@ const OrdersModal = ({
   const language = useSelector((state) => state.app.language);
   const srcError = "/images/no-image.png";
   const [imgError, setImgError] = useState({ pickup: false, drop: false });
-  const isSuperAdmin = useSelector(
-    (state) => state.auth.userPermission.superAdmin
-  );
+  const isSuperAdmin = useSelector((state) => state.auth.userPermission.superAdmin);
   const [showDialog, setShowDialog] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -163,10 +163,7 @@ const OrdersModal = ({
   }, [isOpen]);
 
   const handlerShowLocation = (locationPath) => {
-    window.open(
-      `https://www.google.co.th/maps/place/${locationPath}`,
-      "_blank"
-    );
+    window.open(`https://www.google.co.th/maps/place/${locationPath}`, "_blank");
   };
 
   const handleUpdate = async (_status) => {
@@ -209,10 +206,7 @@ const OrdersModal = ({
           const img_preview = document.querySelector("#img_preview");
           if (file_el) {
             file_el.addEventListener("change", () => {
-              img_preview.setAttribute(
-                "src",
-                URL.createObjectURL(file_el.files[0])
-              );
+              img_preview.setAttribute("src", URL.createObjectURL(file_el.files[0]));
               const figure_el = document.querySelector(".preview-img-confirm");
               figure_el.classList.remove("error");
               const error_el = document.querySelector("#error-message");
@@ -300,10 +294,7 @@ const OrdersModal = ({
         const img_preview = document.querySelector("#img_preview");
         if (file_el) {
           file_el.addEventListener("change", () => {
-            img_preview.setAttribute(
-              "src",
-              URL.createObjectURL(file_el.files[0])
-            );
+            img_preview.setAttribute("src", URL.createObjectURL(file_el.files[0]));
             const figure_el = document.querySelector(".preview-img-confirm");
             figure_el.classList.remove("error");
             const error_el = document.querySelector("#error-message");
@@ -457,24 +448,68 @@ const OrdersModal = ({
                       color="warning"
                       size="small"
                       variant="outlined"
-                      onClick={(e) =>
-                        handlerShowPayment(
-                          `${uploadPath + orderShow.slip_image}`
-                        )
-                      }
+                      onClick={(e) => handlerShowPayment(`${uploadPath + orderShow.slip_image}`)}
                     >
                       {"Verify Payment"}
                     </LoadingButton>
                   ) : (
                     <div>
-                      <h4 style={{ color: "green" }}>
-                        Payment has been verified.
-                      </h4>
+                      <h4 style={{ color: "green" }}>Payment has been verified.</h4>
                     </div>
                   )}
                 </div>
                 {isSuperAdmin && (
-                  <div className="status">
+                  <div
+                    className="status"
+                    style={{ display: "flex", alignItems: "center", gap: "1rem" }}
+                  >
+                    <PDFDownloadLink
+                      document={
+                        <PDFFile
+                          order_number={orderShow.orders_number}
+                          order_date={orderShow.transaction_date}
+                          order_list={orderShow.orderList}
+                          order_delivery_price={orderShow.delivery_price}
+                          order_total_price={orderShow.totalPrice}
+                        />
+                      }
+                      filename="FORM"
+                    >
+                      {({ loading }) =>
+                        loading ? (
+                          <Button
+                            color="success"
+                            variant="contained"
+                            size="small"
+                            style={{
+                              width: "110px",
+                              height: "35px",
+                              display: "flex",
+                              gap: ".5rem",
+                              pointerEvents: "none",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faBook} />
+                            Loading...
+                          </Button>
+                        ) : (
+                          <Button
+                            color="success"
+                            variant="contained"
+                            size="small"
+                            style={{
+                              width: "110px",
+                              height: "35px",
+                              display: "flex",
+                              gap: ".5rem",
+                            }}
+                          >
+                            <FontAwesomeIcon icon={faBook} />
+                            PDF
+                          </Button>
+                        )
+                      }
+                    </PDFDownloadLink>
                     <LoadingButton
                       className="btn"
                       size="small"
@@ -498,10 +533,7 @@ const OrdersModal = ({
                       }}
                     >
                       {statusLists.map((el, index) => (
-                        <MenuItem
-                          key={index}
-                          onClick={() => handleUpdate(el.value)}
-                        >
+                        <MenuItem key={index} onClick={() => handleUpdate(el.value)}>
                           {el.title}
                         </MenuItem>
                       ))}
@@ -537,10 +569,7 @@ const OrdersModal = ({
                               <strong>Pickup Date</strong>
                             </p>
                             <label htmlFor="">
-                              <DateMoment
-                                format={"LLL"}
-                                date={orderShow.date_pickup}
-                              />
+                              <DateMoment format={"LLL"} date={orderShow.date_pickup} />
                             </label>
                           </React.Fragment>
                         )}
@@ -548,10 +577,7 @@ const OrdersModal = ({
                           <strong>Shipping Date</strong>
                         </p>
                         <label htmlFor="">
-                          <DateMoment
-                            format={"LLL"}
-                            date={orderShow.shipping_date}
-                          />
+                          <DateMoment format={"LLL"} date={orderShow.shipping_date} />
                         </label>
                       </div>
                       <div className="column-top">
@@ -584,9 +610,7 @@ const OrdersModal = ({
                         <p>
                           <strong>Distance</strong>
                         </p>
-                        <label htmlFor="">
-                          {parseFloat(orderShow.distance).toFixed(2)} KM.
-                        </label>
+                        <label htmlFor="">{parseFloat(orderShow.distance).toFixed(2)} KM.</label>
                       </div>
                     </div>
                     <div className="box-rows">
@@ -607,7 +631,8 @@ const OrdersModal = ({
                           <strong>Total Price (including shipping fee)</strong>
                         </p>
                         <label htmlFor="">
-                          {orderShow.totalPrice + orderShow.delivery_price} {orderShow.currency_symbol}
+                          {orderShow.totalPrice + orderShow.delivery_price}{" "}
+                          {orderShow.currency_symbol}
                         </label>
                       </div>
                       <div className="column-top">
@@ -615,7 +640,7 @@ const OrdersModal = ({
                           <strong>Delivery Price</strong>
                         </p>
                         <label htmlFor="">
-                          {orderShow.delivery_price || 0 } {orderShow.currency_symbol} 
+                          {orderShow.delivery_price || 0} {orderShow.currency_symbol}
                         </label>
                       </div>
                     </div>
@@ -627,14 +652,15 @@ const OrdersModal = ({
                           </p>
                           <figure
                             onClick={(e) =>
-                              handlerShowImage(
-                                `${uploadPath + orderShow.pickup_image}`,
-                                "pickup"
-                              )
+                              handlerShowImage(`${uploadPath + orderShow.pickup_image}`, "pickup")
                             }
                           >
                             <img
-                              src={orderShow.pickup_image ? `${uploadPath + orderShow.pickup_image}` : ""}
+                              src={
+                                orderShow.pickup_image
+                                  ? `${uploadPath + orderShow.pickup_image}`
+                                  : ""
+                              }
                               alt=""
                               onError={(e) => imageError(e, "pickup")}
                             />
@@ -647,10 +673,7 @@ const OrdersModal = ({
                         </p>
                         <figure
                           onClick={(e) =>
-                            handlerShowImage(
-                              `${uploadPath + orderShow.drop_image}`,
-                              "drop"
-                            )
+                            handlerShowImage(`${uploadPath + orderShow.drop_image}`, "drop")
                           }
                         >
                           <img
@@ -665,22 +688,16 @@ const OrdersModal = ({
                           <p>
                             <strong>Delivery Pickup</strong>
                           </p>
-                          <p className="location">
-                            {orderShow.delivery_pickup_address}
-                          </p>
+                          <p className="location">{orderShow.delivery_pickup_address}</p>
                           <p>
                             <strong>Pickup Details</strong>
                           </p>
-                          <p className="location">
-                            {orderShow.delivery_pickup_address_more}
-                          </p>
-                         
+                          <p className="location">{orderShow.delivery_pickup_address_more}</p>
+
                           <label
                             className="location"
                             htmlFor=""
-                            onClick={(e) =>
-                              handlerShowLocation(orderShow.delivery_pickup)
-                            }
+                            onClick={(e) => handlerShowLocation(orderShow.delivery_pickup)}
                           >
                             <FontAwesomeIcon icon={faMapLocationDot} />
                             {" show location (click)"}
@@ -691,21 +708,15 @@ const OrdersModal = ({
                         <p>
                           <strong>Delivery Drop</strong>
                         </p>
-                        <p className="location">
-                          {orderShow.delivery_drop_address}
-                        </p>
+                        <p className="location">{orderShow.delivery_drop_address}</p>
                         <p>
                           <strong>Drop Details</strong>
                         </p>
-                        <p className="location">
-                          {orderShow.delivery_drop_address_more}
-                        </p>
+                        <p className="location">{orderShow.delivery_drop_address_more}</p>
                         <label
                           className="location"
                           htmlFor=""
-                          onClick={(e) =>
-                            handlerShowLocation(orderShow.delivery_drop)
-                          }
+                          onClick={(e) => handlerShowLocation(orderShow.delivery_drop)}
                         >
                           <FontAwesomeIcon icon={faMapLocationDot} />
                           {" show location (click)"}
@@ -730,10 +741,7 @@ const OrdersModal = ({
                           >
                             <strong>Image Details</strong>
                           </p>
-                          <div
-                            className="image-details"
-                            style={{ display: "flex", gap: "1rem" }}
-                          >
+                          <div className="image-details" style={{ display: "flex", gap: "1rem" }}>
                             {images?.map((item, index) => (
                               <figure
                                 onClick={(e) => {
@@ -779,12 +787,7 @@ const OrdersModal = ({
                 <div className="btn-action">
                   {orderShow.payment_verified && orderShow.status_id === 2 && (
                     <ButtonUI
-                      onClick={() =>
-                        handleApprove(
-                          orderShow.orders_number,
-                          orderShow.type_order
-                        )
-                      }
+                      onClick={() => handleApprove(orderShow.orders_number, orderShow.type_order)}
                       icon={<FontAwesomeIcon icon={faCheck} />}
                       className="btn-save"
                       on="save"
