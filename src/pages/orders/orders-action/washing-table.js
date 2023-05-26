@@ -11,7 +11,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import ButtonUI from "../../../components/ui/button/button";
 
-const WashingTable = ({ orderList, showDialog, setShowDialog, setApproveForm }) => {
+const WashingTable = ({ orderList, showDialog, setShowDialog, setApproveForm, setOrderShow }) => {
   const uploadPath = useSelector((state) => state.app.uploadPath);
 
   const handleShowDialog = (orders_number, product_id, page_id, cart_number) => {

@@ -55,6 +55,7 @@ const OrdersModal = ({
   setRefreshData,
   refreshData,
   editHandler,
+  setOrderShow,
 }) => {
   const statusLists = [
     {
@@ -773,9 +774,10 @@ const OrdersModal = ({
                         showDialog={showDialog}
                         setShowDialog={setShowDialog}
                         setApproveForm={setApproveForm}
+                        setOrderShow={setOrderShow}
                       />
                     ) : (
-                      <FoodsTable orderList={orderShow.orderList} />
+                      <FoodsTable orderList={orderShow.orderList} orderShow={orderShow} setOrderShow={setOrderShow} />
                     )}
                   </div>
                 </Box>

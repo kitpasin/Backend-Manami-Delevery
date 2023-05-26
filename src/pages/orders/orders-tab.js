@@ -232,6 +232,7 @@ const OrdersTab = ({
           setClose={setOrdersModal}
           isWashing={isWashing}
           editHandler={editHandler}
+          setOrderShow={setOrderShow}
         />
       }
     </Fragment>

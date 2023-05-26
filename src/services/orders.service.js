@@ -56,6 +56,20 @@ export const svVerifiedItem = (formBody) => {
     )
 }
 
+export const svUpdateProductList = (quantity, id, orders_number) => {
+    return axios.post(`order/product/update/${id}`, {quantity: quantity, orders_number: orders_number}).then(
+    (res) => { return { status: true, data: res.data }},
+    (error) => { return { status: false, description: (!error.response.data)?"Something went wrong":error.response.data.description }}
+    )
+}
+
+export const svDeleteProductItem = (id, orders_number) => {
+    return axios.delete(`order/product/delete/item/${id}/${orders_number}`).then(
+    (res) => { return { status: true, data: res.data }},
+    (error) => { return { status: false, description: (!error.response.data)?"Something went wrong":error.response.data.description }}
+    )
+}
+
 
 export const svGetOrderPending = () => {
     return axios.get(`order/data/pending`)
