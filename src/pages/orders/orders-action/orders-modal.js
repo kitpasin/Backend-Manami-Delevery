@@ -44,7 +44,15 @@ import {
 } from "../../../services/orders.service";
 import { svProductCapacity } from "../../../services/product.service";
 import { appActions } from "../../../store/app-slice";
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import {
+  PDFViewer,
+  PDFDownloadLink,
+  Document,
+  Page,
+  Text,
+  BlobProvider,
+  pdf,
+} from "@react-pdf/renderer";
 import PDFFile from "./pdffile";
 
 const OrdersModal = ({
@@ -408,6 +416,20 @@ const OrdersModal = ({
     });
   };
 
+  const openPDF = async () => {
+    const blob = await pdf(
+      <PDFFile
+        order_number={orderShow.orders_number}
+        order_date={orderShow.transaction_date}
+        order_list={orderShow.orderList}
+        order_delivery_price={orderShow.delivery_price}
+        order_total_price={orderShow.totalPrice}
+      />
+    ).toBlob();
+    const pdfURL = URL.createObjectURL(blob);
+    window.open(pdfURL, "_blank");
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <Modal
@@ -463,53 +485,20 @@ const OrdersModal = ({
                     className="status"
                     style={{ display: "flex", alignItems: "center", gap: "1rem" }}
                   >
-                    <PDFDownloadLink
-                      document={
-                        <PDFFile
-                          order_number={orderShow.orders_number}
-                          order_date={orderShow.transaction_date}
-                          order_list={orderShow.orderList}
-                          order_delivery_price={orderShow.delivery_price}
-                          order_total_price={orderShow.totalPrice}
-                        />
-                      }
-                      filename="FORM"
-                    >
-                      {({ loading }) =>
-                        loading ? (
-                          <Button
-                            color="success"
-                            variant="contained"
-                            size="small"
-                            style={{
-                              width: "110px",
-                              height: "35px",
-                              display: "flex",
-                              gap: ".5rem",
-                              pointerEvents: "none",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faBook} />
-                            Loading...
-                          </Button>
-                        ) : (
-                          <Button
-                            color="success"
-                            variant="contained"
-                            size="small"
-                            style={{
-                              width: "110px",
-                              height: "35px",
-                              display: "flex",
-                              gap: ".5rem",
-                            }}
-                          >
-                            <FontAwesomeIcon icon={faBook} />
-                            PDF
-                          </Button>
-                        )
-                      }
-                    </PDFDownloadLink>
+
+                    {orderShow.status_id !== 5 && (
+                      <Button
+                        onClick={() => openPDF()}
+                        size="small"
+                        color="error"
+                        variant="contained"
+                        style={{ display: "flex", gap: "0.5rem" }}
+                      >
+                        <FontAwesomeIcon icon={faBook} />
+                        Open PDF
+                      </Button>
+                    )}
+
                     <LoadingButton
                       className="btn"
                       size="small"
@@ -778,7 +767,11 @@ const OrdersModal = ({
                         setOrderShow={setOrderShow}
                       />
                     ) : (
-                      <FoodsTable orderShow={orderShow} orderList={orderShow.orderList} setOrderShow={setOrderShow} />
+                      <FoodsTable
+                        orderShow={orderShow}
+                        orderList={orderShow.orderList}
+                        setOrderShow={setOrderShow}
+                      />
                     )}
                   </div>
                 </Box>
@@ -940,8 +933,8 @@ const ApproveModel = ({
       <div className="details">
         {diff !== 0 && (
           <Chip
-            label={diff > 0 ?`+ ${diff} ${currency}`: `${diff} ${currency}`}
-            color={diff > 0 ?"success":"error"}
+            label={diff > 0 ? `+ ${diff} ${currency}` : `${diff} ${currency}`}
+            color={diff > 0 ? "success" : "error"}
             variant="outlined"
           />
         )}

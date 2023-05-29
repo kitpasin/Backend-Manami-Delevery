@@ -1,6 +1,6 @@
 import React from "react";
 import { Page, Text, Image, Document, StyleSheet, View } from "@react-pdf/renderer";
-import Logo from "./Logo-Wynnsoft-Management.png";
+import Logo from "./manami_logo.png";
 
 const styles = StyleSheet.create({
   body: {
@@ -15,18 +15,18 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 12,
+    marginBottom: 30,
   },
   image: {
     width: 100,
   },
   contact: {
-    fontSize: 14,
+    fontSize: 24,
     textAlign: "center",
     marginBottom: 10,
   },
   address: {
-    fontSize: 14,
+    fontSize: 24,
     textAlign: "center",
     marginBottom: 30,
   },
@@ -39,34 +39,34 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   titleLeft: {
-    fontSize: 14,
-    flex: 1,
+    fontSize: 24,
     textAlign: "left",
+    width: "50%",
   },
   titleCenter: {
-    fontSize: 14,
-    flex: 1,
+    fontSize: 24,
     textAlign: "center",
+    width: "25%"
   },
   titleRight: {
-    fontSize: 14,
-    flex: 1,
-    textAlign: "right",
+    fontSize: 24,
+    textAlign: "center",
+    width: "25%"
   },
   descriptionLeft: {
-    fontSize: 14,
-    flex: 1,
+    fontSize: 24,
     textAlign: "left",
+    width: "50%",
   },
   descriptionCenter: {
-    fontSize: 14,
-    flex: 1,
+    fontSize: 24,
     textAlign: "center",
+    width: "25%"
   },
   descriptionRight: {
-    fontSize: 14,
-    flex: 1,
+    fontSize: 24,
     textAlign: "right",
+    width: "25%"
   },
 });
 
@@ -108,12 +108,12 @@ const PDFFile = ({
             <Text style={styles.contact}>Telephone: {page.contact}</Text>
             <Text style={styles.contact}>Line ID: {page.lineId}</Text>
             <Text style={styles.contact}>Mail: {page.mail}</Text>
-            <Text style={styles.address}>Address: {page.address}</Text>
+            <Text style={styles.address}>{page.address}</Text>
             <View style={styles.textContainer}>
-              <Text style={styles.descriptionLeft}>Order: {page.order_number}</Text>
-              <Text style={styles.descriptionRight}>Date: {page.order_date}</Text>
+              <Text style={styles.descriptionLeft}>{page.order_number}</Text>
+              <Text style={{width: "50%", fontSize: 24, textAlign: "right"}}>{page.order_date}</Text>
             </View>
-            <View style={{width: "100%", marginTop: 32}}>
+            <View style={{ width: "100%", marginTop: 32 }}>
               <View style={styles.textContainer}>
                 <Text style={styles.titleLeft}>List</Text>
                 <Text style={styles.titleCenter}>Unit</Text>
@@ -137,20 +137,20 @@ const PDFFile = ({
                 </View>
               ) : (
                 <View key={index} style={styles.textContainer}>
-                  <Text style={styles.descriptionLeft}>{row.title}</Text>
+                  <Text style={styles.descriptionLeft}>{row.product_name}</Text>
                   <Text style={styles.descriptionCenter}>{row.quantity}</Text>
-                  <Text style={styles.descriptionRight}>{row.totalPrice} THB</Text>
+                  <Text style={styles.descriptionRight}>{row.product_price} THB</Text>
                 </View>
               )
             )}
-            <View style={{width: "100%", marginTop: 32}}>
+            <View style={{ width: "100%", marginTop: 32 }}>
               <View style={styles.textContainer}>
                 <Text style={styles.titleLeft}>Delivery</Text>
-                <Text style={styles.titleRight}>{page.order_delivery_price} THB</Text>
+                <Text style={styles.descriptionRight}>{page.order_delivery_price} THB</Text>
               </View>
               <View style={styles.textContainer}>
                 <Text style={styles.titleLeft}>Total</Text>
-                <Text style={styles.titleRight}>{page.order_total_price} THB</Text>
+                <Text style={styles.descriptionRight}>{page.order_total_price} THB</Text>
               </View>
             </View>
           </Page>
