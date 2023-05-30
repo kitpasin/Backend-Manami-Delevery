@@ -4,12 +4,12 @@ import Logo from "./manami_logo.png";
 
 const styles = StyleSheet.create({
   body: {
-    paddingTop: 35,
-    paddingBottom: 65,
-    paddingHorizontal: 35,
+    paddingVertical: 30,
+    paddingHorizontal: 45,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    width: "100%",
   },
   imageContainer: {
     display: "flex",
@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   image: {
-    width: 100,
+    width: 125,
   },
   contact: {
     fontSize: 24,
@@ -111,7 +111,9 @@ const PDFFile = ({
             <Text style={styles.address}>{page.address}</Text>
             <View style={styles.textContainer}>
               <Text style={styles.descriptionLeft}>{page.order_number}</Text>
-              <Text style={{width: "50%", fontSize: 24, textAlign: "right"}}>{page.order_date}</Text>
+              <Text style={{ width: "50%", fontSize: 24, textAlign: "right" }}>
+                {page.order_date}
+              </Text>
             </View>
             <View style={{ width: "100%", marginTop: 32 }}>
               <View style={styles.textContainer}>
@@ -139,18 +141,25 @@ const PDFFile = ({
                 <View key={index} style={styles.textContainer}>
                   <Text style={styles.descriptionLeft}>{row.product_name}</Text>
                   <Text style={styles.descriptionCenter}>{row.quantity}</Text>
-                  <Text style={styles.descriptionRight}>{row.product_price} THB</Text>
+                  <Text style={styles.descriptionRight}>{row.product_price * row.quantity} THB</Text>
                 </View>
               )
             )}
             <View style={{ width: "100%", marginTop: 32 }}>
+              <View>
+                <Text style={{ marginVertical: 32, textAlign: "center" }}>
+                  --------------------------------------------------
+                </Text>
+              </View>
               <View style={styles.textContainer}>
                 <Text style={styles.titleLeft}>Delivery</Text>
                 <Text style={styles.descriptionRight}>{page.order_delivery_price} THB</Text>
               </View>
               <View style={styles.textContainer}>
                 <Text style={styles.titleLeft}>Total</Text>
-                <Text style={styles.descriptionRight}>{page.order_total_price} THB</Text>
+                <Text style={styles.descriptionRight}>
+                  {page.order_total_price + page.order_delivery_price} THB
+                </Text>
               </View>
             </View>
           </Page>

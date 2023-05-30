@@ -74,7 +74,7 @@ const Reports = () => {
     onFetchOrderData();
   }, [refreshData, language, tabSelect]);
 
-  console.log(reportsData)
+  // console.log(reportsData)
 
   return (
     <section id="reports-page">

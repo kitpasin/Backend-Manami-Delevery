@@ -20,6 +20,8 @@ import DateMoment from "../../components/ui/date-moment/date-moment";
 
 const OrdersCard = ({ items, editHandler, deleteHandler }) => {
 
+  // console.log(items)
+  
   return (
     <TableContainer component={Paper} className="card-desktop">
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
