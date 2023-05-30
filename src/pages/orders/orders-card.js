@@ -31,7 +31,7 @@ const OrdersCard = ({ items, editHandler, deleteHandler }) => {
             <TableCell align="left">Order Number</TableCell>
             <TableCell align="left">Customer Name</TableCell>
             <TableCell align="left">Branch</TableCell>
-            <TableCell align="left">Type Order</TableCell>
+            <TableCell align="left">Order Type</TableCell>
             <TableCell align="left">Status</TableCell>
             <TableCell align="left">Transaction Date</TableCell>
             <TableCell align="left">Action</TableCell>
@@ -46,7 +46,11 @@ const OrdersCard = ({ items, editHandler, deleteHandler }) => {
               <TableCell align="left">{row.orders_number}</TableCell>
               <TableCell align="left">{row.member_name}</TableCell>
               <TableCell align="left">{row.branch_name}</TableCell>
-              <TableCell align="left">{row.type_order}</TableCell>
+              {row.type_order === "washing" ? (
+                <TableCell align="left">Washing and Drying</TableCell>
+              ) : (
+                <TableCell align="left">Foods</TableCell>
+              )}
               <TableCell align="left">
                 <Chip
                   label={row.status}
