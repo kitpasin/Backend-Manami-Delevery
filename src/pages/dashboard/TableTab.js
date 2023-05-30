@@ -92,8 +92,6 @@ export default function TableTab({ orderList }) {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - orderList.length) : 0;
 
-  console.log(orderList);
-
   const [selectedOrdersNumber, setSelectedOrdersNumber] = useState(null);
   const [selectedProductsName, setSelectedProductsName] = useState([]);
   const [selectedTypesOrder, setSelectedTypesOrder] = useState(null);

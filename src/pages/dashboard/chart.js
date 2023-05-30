@@ -25,184 +25,282 @@ const Chart = ({
 }) => {
   const [orderBar, setOrderBar] = useState([]);
   const [orderLabel, setOrderLabel] = useState([]);
+  let start = dayjs().subtract(6, "day").toISOString().substring(0, 10);
+  let end = dayjs().toISOString().substring(0, 10);
+  let tt = 0;
+
+  const fetchData = (type, callback) => {
+    setTimeout(() => {
+      svGetOrderBar(start, end, type).then((res) => {
+        if (res.status) {
+          let data = [];
+          let label = [];
+          let newLabel = [];
+
+          if (barTitle === "Wash&Dry") {
+            data = res.data?.filter((order) => order.type_order === "washing");
+            label = data.map((item) => item.shipping_date)
+            newLabel = label.filter(
+              (item, pos) => label.indexOf(item) == pos
+            );
+            data.map((item) => tt += item.total_price)
+          } else if (barTitle === "Vending&Cafe") {
+            data = res.data?.filter((order) => order.type_order === "foods");
+            label = data.map((item) => item.shipping_date)
+            newLabel = label.filter(
+              (item, pos) => label.indexOf(item) == pos
+            );
+            data.map((item) => tt += item.total_price)
+          } else if (barTitle === "Delivery") {
+            data = res.data?.map((order) => order);
+            label = data.map((item) => item.shipping_date)
+            newLabel = label.filter(
+              (item, pos) => label.indexOf(item) == pos
+            );
+            data.map((item) => tt += item.delivery_price)
+          }
+
+          callback(data, newLabel, tt); /* Callback Function */
+        }
+      });
+    }, 200);
+  };
 
   useEffect(() => {
-    let tt = 0;
-    let start = dayjs().subtract(6, "day").toISOString().substring(0, 10);
-    let end = dayjs().toISOString().substring(0, 10);
     if (views === "week") {
       if (barTitle === "Wash&Dry") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "week").then((res) => {
-            if (res.status) {
-              const data = res.data?.filter(
-                (order) => order.type_order === "washing"
-              );
-              const label = res.data?.map((item) => item.shipping_date);
-              res.data?.map((item) => {
-                if (item.type_order === "washing") {
-                  tt += item.total_price;
-                }
-              });
-              const newLabel = label.filter(function (item, pos) {
-                return label.indexOf(item) == pos;
-              });
-              setOrderBar(data);
-              setOrderLabel(newLabel);
-              setTotalPriceWash(tt);
-            }
-          });
-        }, 200);
+        fetchData("week", (data, newLabel, totalPrice) => {
+          setOrderBar(data);
+          setOrderLabel(newLabel);
+          setTotalPriceWash(totalPrice);
+        });
       } else if (barTitle === "Vending&Cafe") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "week").then((res) => {
-            if (res.status) {
-              const data = res.data?.filter(
-                (order) => order.type_order === "foods"
-              );
-              const label = res.data?.map((item) => item.shipping_date);
-              res.data?.map((item) => {
-                if (item.type_order === "foods") {
-                  tt += item.total_price;
-                }
-              });
-              const newLabel = label.filter(function (item, pos) {
-                return label.indexOf(item) == pos;
-              });
-              setOrderBar(data);
-              setOrderLabel(newLabel);
-              setTotalPriceFood(tt);
-            }
-          });
-        }, 200);
+        fetchData("week", (data, newLabel, totalPrice) => {
+          setOrderBar(data);
+          setOrderLabel(newLabel);
+          setTotalPriceFood(totalPrice);
+        });
       } else if (barTitle === "Delivery") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "week").then((res) => {
-            if (res.status) {
-              const data = res.data?.map((order) => order);
-              const label = res.data?.map((item) => item.shipping_date);
-              res.data?.map((item) => {
-                tt += item.delivery_price;
-              });
-              const newLabel = label.filter(function (item, pos) {
-                return label.indexOf(item) == pos;
-              });
-              setOrderBar(data);
-              setOrderLabel(newLabel);
-              setTotalPrice(tt);
-            }
-          });
-        }, 200);
+        fetchData("week", (data, newLabel, totalPrice) => {
+          setOrderBar(data);
+          setOrderLabel(newLabel);
+          setTotalPrice(totalPrice);
+        });
       }
     } else if (views === "month") {
       if (barTitle === "Wash&Dry") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "month").then((res) => {
-            if (res.status) {
-              const data = res.data?.filter(
-                (order) => order.type_order === "washing"
-              );
-              const label = res.data?.map((item) => item.shipping_date);
-              res.data?.map((item) => {
-                if (item.type_order === "washing") {
-                  tt += item.total_price;
-                }
-              });
-
-              setOrderBar(data);
-              setTotalPriceWash(tt);
-            }
-          });
-        }, 200);
+        fetchData("month", (data, _, totalPrice) => {
+          setOrderBar(data);
+          setTotalPriceWash(totalPrice);
+        });
       } else if (barTitle === "Vending&Cafe") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "month").then((res) => {
-            if (res.status) {
-              const data = res.data?.filter(
-                (order) => order.type_order === "foods"
-              );
-              const label = res.data?.map((item) => item.shipping_date);
-              res.data?.map((item) => {
-                if (item.type_order === "foods") {
-                  tt += item.total_price;
-                }
-              });
-
-              setOrderBar(data);
-              setTotalPriceFood(tt);
-            }
-          });
-        }, 200);
+        fetchData("month", (data, _, totalPrice) => {
+          setOrderBar(data);
+          setTotalPriceFood(totalPrice);
+        });
       } else if (barTitle === "Delivery") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "month").then((res) => {
-            if (res.status) {
-              const data = res.data?.map((order) => order);
-              const label = res.data?.map((item) => item.shipping_date);
-              res.data?.map((item) => {
-                tt += item.delivery_price;
-              });
-
-              setOrderBar(data);
-              setTotalPrice(tt);
-            }
-          });
-        }, 200);
+        fetchData("month", (data, _, totalPrice) => {
+          setOrderBar(data);
+          setTotalPrice(totalPrice);
+        });
       }
     } else if (views === "year") {
       if (barTitle === "Wash&Dry") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "year").then((res) => {
-            if (res.status) {
-              const data = res.data?.filter(
-                (order) => order.type_order === "washing"
-              );
-              res.data?.map((item) => {
-                if (item.type_order === "washing") {
-                  tt += item.total_price;
-                }
-              });
-
-              setOrderBar(data);
-              setTotalPriceWash(tt);
-            }
-          });
-        }, 200);
+        fetchData("year", (data, _, totalPrice) => {
+          setOrderBar(data);
+          setTotalPriceWash(totalPrice);
+        });
       } else if (barTitle === "Vending&Cafe") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "year").then((res) => {
-            if (res.status) {
-              const data = res.data?.filter(
-                (order) => order.type_order === "foods"
-              );
-              res.data?.map((item) => {
-                if (item.type_order === "foods") {
-                  tt += item.total_price;
-                }
-              });
-
-              setOrderBar(data);
-              setTotalPriceFood(tt);
-            }
-          });
-        }, 200);
+        fetchData("year", (data, _, totalPrice) => {
+          setOrderBar(data);
+          setTotalPriceFood(totalPrice);
+        });
       } else if (barTitle === "Delivery") {
-        setTimeout(() => {
-          svGetOrderBar(start, end, "year").then((res) => {
-            if (res.status) {
-              const data = res.data?.map((order) => order);
-              res.data?.map((item) => {
-                tt += item.delivery_price;
-              });
-
-              setOrderBar(data);
-              setTotalPrice(tt);
-            }
-          });
-        }, 200);
+        fetchData("year", (data, _, totalPrice) => {
+          setOrderBar(data);
+          setTotalPrice(totalPrice);
+        });
       }
     }
   }, [views, refreshData]);
+
+  // useEffect(() => {
+  //   let tt = 0;
+  //   let start = dayjs().subtract(6, "day").toISOString().substring(0, 10);
+  //   let end = dayjs().toISOString().substring(0, 10);
+  //   if (views === "week") {
+  //     if (barTitle === "Wash&Dry") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "week").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.filter(
+  //               (order) => order.type_order === "washing"
+  //             );
+  //             const label = res.data?.map((item) => item.shipping_date);
+  //             res.data?.map((item) => {
+  //               if (item.type_order === "washing") {
+  //                 tt += item.total_price;
+  //               }
+  //             });
+  //             const newLabel = label.filter(function (item, pos) {
+  //               return label.indexOf(item) == pos;
+  //             });
+  //             setOrderBar(data);
+  //             setOrderLabel(newLabel);
+  //             setTotalPriceWash(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     } else if (barTitle === "Vending&Cafe") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "week").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.filter(
+  //               (order) => order.type_order === "foods"
+  //             );
+  //             const label = res.data?.map((item) => item.shipping_date);
+  //             res.data?.map((item) => {
+  //               if (item.type_order === "foods") {
+  //                 tt += item.total_price;
+  //               }
+  //             });
+  //             const newLabel = label.filter(function (item, pos) {
+  //               return label.indexOf(item) == pos;
+  //             });
+  //             setOrderBar(data);
+  //             setOrderLabel(newLabel);
+  //             setTotalPriceFood(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     } else if (barTitle === "Delivery") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "week").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.map((order) => order);
+  //             const label = res.data?.map((item) => item.shipping_date);
+  //             res.data?.map((item) => {
+  //               tt += item.delivery_price;
+  //             });
+  //             const newLabel = label.filter(function (item, pos) {
+  //               return label.indexOf(item) == pos;
+  //             });
+  //             setOrderBar(data);
+  //             setOrderLabel(newLabel);
+  //             setTotalPrice(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     }
+  //   } else if (views === "month") {
+  //     if (barTitle === "Wash&Dry") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "month").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.filter(
+  //               (order) => order.type_order === "washing"
+  //             );
+  //             const label = res.data?.map((item) => item.shipping_date);
+  //             res.data?.map((item) => {
+  //               if (item.type_order === "washing") {
+  //                 tt += item.total_price;
+  //               }
+  //             });
+
+  //             setOrderBar(data);
+  //             setTotalPriceWash(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     } else if (barTitle === "Vending&Cafe") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "month").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.filter(
+  //               (order) => order.type_order === "foods"
+  //             );
+  //             const label = res.data?.map((item) => item.shipping_date);
+  //             res.data?.map((item) => {
+  //               if (item.type_order === "foods") {
+  //                 tt += item.total_price;
+  //               }
+  //             });
+
+  //             setOrderBar(data);
+  //             setTotalPriceFood(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     } else if (barTitle === "Delivery") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "month").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.map((order) => order);
+  //             const label = res.data?.map((item) => item.shipping_date);
+  //             res.data?.map((item) => {
+  //               tt += item.delivery_price;
+  //             });
+
+  //             setOrderBar(data);
+  //             setTotalPrice(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     }
+  //   } else if (views === "year") {
+  //     if (barTitle === "Wash&Dry") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "year").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.filter(
+  //               (order) => order.type_order === "washing"
+  //             );
+  //             res.data?.map((item) => {
+  //               if (item.type_order === "washing") {
+  //                 tt += item.total_price;
+  //               }
+  //             });
+
+  //             setOrderBar(data);
+  //             setTotalPriceWash(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     } else if (barTitle === "Vending&Cafe") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "year").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.filter(
+  //               (order) => order.type_order === "foods"
+  //             );
+  //             res.data?.map((item) => {
+  //               if (item.type_order === "foods") {
+  //                 tt += item.total_price;
+  //               }
+  //             });
+
+  //             setOrderBar(data);
+  //             setTotalPriceFood(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     } else if (barTitle === "Delivery") {
+  //       setTimeout(() => {
+  //         svGetOrderBar(start, end, "year").then((res) => {
+  //           if (res.status) {
+  //             const data = res.data?.map((order) => order);
+  //             res.data?.map((item) => {
+  //               tt += item.delivery_price;
+  //             });
+
+  //             setOrderBar(data);
+  //             setTotalPrice(tt);
+  //           }
+  //         });
+  //       }, 200);
+  //     }
+  //   }
+  // }, [views, refreshData]);
 
   ChartJS.register(
     CategoryScale,
