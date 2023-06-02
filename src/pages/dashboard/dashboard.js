@@ -65,8 +65,9 @@ const DashboardPage = () => {
       setTitle("7 Days ago");
     } else if (views === "month") {
       const today = new Date();
+      const currentYear = today.getFullYear();
       today.toLocaleString("default", { month: "long" });
-      setTitle(today.toLocaleString("default", { month: "long" }));
+      setTitle(today.toLocaleString("default", { month: "long" }) + " " + currentYear);
     } else if (views === "year") {
       setTitle("2023");
     }
@@ -388,9 +389,9 @@ const DashboardPage = () => {
 
             <div className="card-chart-control">
               <div className="head-title">
-                <p>Wash&Dry</p>
-                <h3>{title}</h3>
-                <p>Total: {totalPriceWash} THB</p>
+                <Typography variant="subtitle1" gutterBottom style={{color: "rgb(0, 94, 160)"}}>Wash&Dry</Typography>
+                <Typography variant="subtitle1" gutterBottom>{title}</Typography>
+                <Typography variant="subtitle1" gutterBottom>Total: {totalPriceWash} THB</Typography>
               </div>
               <div className="card-body">
                 <Chart
@@ -410,9 +411,9 @@ const DashboardPage = () => {
             </div>
             <div className="card-chart-control">
               <div className="head-title">
-                <p>Vending&Cafe</p>
-                <h3>{title}</h3>
-                <p>Total: {totalPriceFood} THB</p>
+                <Typography variant="subtitle1" gutterBottom style={{color: "rgb(255, 125, 0)"}}>Vending&Cafe</Typography>
+                <Typography variant="subtitle1" gutterBottom>{title}</Typography>
+                <Typography variant="subtitle1" gutterBottom>Total: {totalPriceWash} THB</Typography>
               </div>
               <div className="card-body">
                 <Chart
@@ -432,9 +433,9 @@ const DashboardPage = () => {
             </div>
             <div className="card-chart-control">
               <div className="head-title">
-                <p>Delivery</p>
-                <h3>{title}</h3>
-                <p>Total: {totalPrice} THB</p>
+                <Typography variant="subtitle1" gutterBottom style={{color: "rgb(120, 41, 15)"}}>Delivery</Typography>
+                <Typography variant="subtitle1" gutterBottom>{title}</Typography>
+                <Typography variant="subtitle1" gutterBottom>Total: {totalPriceWash} THB</Typography>
               </div>
               <div className="card-body">
                 <Chart

@@ -25,11 +25,19 @@ const Chart = ({
 }) => {
   const [orderBar, setOrderBar] = useState([]);
   const [orderLabel, setOrderLabel] = useState([]);
-  let start = dayjs().subtract(6, "day").toISOString().substring(0, 10);
-  let end = dayjs().toISOString().substring(0, 10);
-  let tt = 0;
 
   const fetchData = (type, callback) => {
+    let start = dayjs().subtract(6, "day").toISOString().substring(0, 10);
+    let end = dayjs().toISOString().substring(0, 10);
+    let tt = 0;
+
+    let labelArr = [];
+    for (let i = 6; i >= 0; i--) {
+      labelArr.push(dayjs().subtract(i, "day").toISOString().substring(0, 10));
+    }
+
+    console.log(labelArr);
+
     setTimeout(() => {
       svGetOrderBar(start, end, type).then((res) => {
         if (res.status) {
@@ -39,25 +47,19 @@ const Chart = ({
 
           if (barTitle === "Wash&Dry") {
             data = res.data?.filter((order) => order.type_order === "washing");
-            label = data.map((item) => item.shipping_date)
-            newLabel = label.filter(
-              (item, pos) => label.indexOf(item) == pos
-            );
-            data.map((item) => tt += item.total_price)
+            label = data.map((item) => item.shipping_date);
+            newLabel = label.filter((item, pos) => label.indexOf(item) == pos);
+            data.map((item) => (tt += item.total_price));
           } else if (barTitle === "Vending&Cafe") {
             data = res.data?.filter((order) => order.type_order === "foods");
-            label = data.map((item) => item.shipping_date)
-            newLabel = label.filter(
-              (item, pos) => label.indexOf(item) == pos
-            );
-            data.map((item) => tt += item.total_price)
+            label = data.map((item) => item.shipping_date);
+            newLabel = label.filter((item, pos) => label.indexOf(item) == pos);
+            data.map((item) => (tt += item.total_price));
           } else if (barTitle === "Delivery") {
             data = res.data?.map((order) => order);
-            label = data.map((item) => item.shipping_date)
-            newLabel = label.filter(
-              (item, pos) => label.indexOf(item) == pos
-            );
-            data.map((item) => tt += item.delivery_price)
+            label = data.map((item) => item.shipping_date);
+            newLabel = label.filter((item, pos) => label.indexOf(item) == pos);
+            data.map((item) => (tt += item.delivery_price));
           }
 
           callback(data, newLabel, tt); /* Callback Function */
@@ -71,22 +73,28 @@ const Chart = ({
       if (barTitle === "Wash&Dry") {
         fetchData("week", (data, newLabel, totalPrice) => {
           setOrderBar(data);
-          setOrderLabel(newLabel);
           setTotalPriceWash(totalPrice);
         });
       } else if (barTitle === "Vending&Cafe") {
         fetchData("week", (data, newLabel, totalPrice) => {
           setOrderBar(data);
-          setOrderLabel(newLabel);
           setTotalPriceFood(totalPrice);
         });
       } else if (barTitle === "Delivery") {
         fetchData("week", (data, newLabel, totalPrice) => {
           setOrderBar(data);
-          setOrderLabel(newLabel);
           setTotalPrice(totalPrice);
         });
       }
+
+      let labelArr = [];
+      for (let i = 6; i >= 0; i--) {
+        labelArr.push(
+          dayjs().subtract(i, "day").toISOString().substring(0, 10)
+        );
+      }
+      setOrderLabel(labelArr);
+
     } else if (views === "month") {
       if (barTitle === "Wash&Dry") {
         fetchData("month", (data, _, totalPrice) => {
@@ -341,103 +349,101 @@ const Chart = ({
     },
   };
 
-  if (orderBar.length > 0) {
-    const labels =
-      views === "week"
-        ? orderLabel
-        : views === "month"
-        ? [
-            // "January",
-            // "February",
-            // "March",
-            // "April",
-            // "May",
-            // "June",
-            // "July",
-            // "August",
-            // "September",
-            // "October",
-            // "November",
-            // "December",
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09",
-            "10",
-            "11",
-            "12",
-            "13",
-            "14",
-            "15",
-            "16",
-            "17",
-            "18",
-            "19",
-            "20",
-            "21",
-            "22",
-            "23",
-            "24",
-            "25",
-            "26",
-            "27",
-            "28",
-            "29",
-            "30",
-            "31",
-          ]
-        : [
-            "01",
-            "02",
-            "03",
-            "04",
-            "05",
-            "06",
-            "07",
-            "08",
-            "09",
-            "10",
-            "11",
-            "12",
-          ];
+  const labels =
+    views === "week"
+      ? orderLabel
+      : views === "month"
+      ? [
+          // "January",
+          // "February",
+          // "March",
+          // "April",
+          // "May",
+          // "June",
+          // "July",
+          // "August",
+          // "September",
+          // "October",
+          // "November",
+          // "December",
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+          "07",
+          "08",
+          "09",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "22",
+          "23",
+          "24",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+        ]
+      : [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+          "07",
+          "08",
+          "09",
+          "10",
+          "11",
+          "12",
+        ];
 
-    const data = {
-      labels,
-      datasets: [
-        {
-          label: "Total ",
-          data: labels.map((item, ind) => {
-            let tt = 0;
-            for (let i of orderBar) {
-              if (i.shipping_date === item) {
-                if (barTitle === "Delivery") {
-                  tt += i.delivery_price;
-                } else {
-                  tt += i.total_price;
-                }
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Total ",
+        data: labels.map((item, ind) => {
+          let tt = 0;
+          for (let i of orderBar) {
+            if (i.shipping_date === item) {
+              if (barTitle === "Delivery") {
+                tt += i.delivery_price;
+              } else {
+                tt += i.total_price;
               }
             }
-            return tt;
-          }),
-          backgroundColor: `rgba(${colorRGB})`,
-          borderWidth: 1,
-          borderRadius: 5,
-        },
-        // {
-        //   label: 'Dataset 2',
-        //   data: labels.map(() => Math.floor(Math.random() * 100)),
-        //   backgroundColor: 'rgba(53, 162, 235, 0.5)',
-        // },
-      ],
-    };
+          }
+          return tt;
+        }),
+        backgroundColor: `rgba(${colorRGB})`,
+        borderWidth: 1,
+        borderRadius: 5,
+      },
+      // {
+      //   label: 'Dataset 2',
+      //   data: labels.map(() => Math.floor(Math.random() * 100)),
+      //   backgroundColor: 'rgba(53, 162, 235, 0.5)',
+      // },
+    ],
+  };
 
-    return <Bar options={options} data={data} />;
-  }
+  return <Bar options={options} data={data} />;
 };
 
 export default Chart;
