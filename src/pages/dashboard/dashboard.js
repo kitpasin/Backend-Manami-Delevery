@@ -413,7 +413,7 @@ const DashboardPage = () => {
               <div className="head-title">
                 <Typography variant="subtitle1" gutterBottom style={{color: "rgb(255, 125, 0)"}}>Vending&Cafe</Typography>
                 <Typography variant="subtitle1" gutterBottom>{title}</Typography>
-                <Typography variant="subtitle1" gutterBottom>Total: {totalPriceWash} THB</Typography>
+                <Typography variant="subtitle1" gutterBottom>Total: {totalPriceFood} THB</Typography>
               </div>
               <div className="card-body">
                 <Chart
@@ -435,7 +435,7 @@ const DashboardPage = () => {
               <div className="head-title">
                 <Typography variant="subtitle1" gutterBottom style={{color: "rgb(120, 41, 15)"}}>Delivery</Typography>
                 <Typography variant="subtitle1" gutterBottom>{title}</Typography>
-                <Typography variant="subtitle1" gutterBottom>Total: {totalPriceWash} THB</Typography>
+                <Typography variant="subtitle1" gutterBottom>Total: {totalPrice} THB</Typography>
               </div>
               <div className="card-body">
                 <Chart
