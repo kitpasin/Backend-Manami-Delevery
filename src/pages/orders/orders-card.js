@@ -20,7 +20,7 @@ import DateMoment from "../../components/ui/date-moment/date-moment";
 
 const OrdersCard = ({ items, editHandler, deleteHandler }) => {
 
-  // console.log(items)
+  console.log(items)
   
   return (
     <TableContainer component={Paper} className="card-desktop">
@@ -32,7 +32,9 @@ const OrdersCard = ({ items, editHandler, deleteHandler }) => {
             <TableCell align="left">Customer Name</TableCell>
             <TableCell align="left">Branch</TableCell>
             <TableCell align="left">Order Type</TableCell>
-            <TableCell align="left">Status</TableCell>
+            <TableCell align="left">Order Status</TableCell>
+            <TableCell align="left">Payment Type</TableCell>
+            <TableCell align="left">Payment Status</TableCell>
             <TableCell align="left">Transaction Date</TableCell>
             <TableCell align="left">Action</TableCell>
           </TableRow>
@@ -68,6 +70,8 @@ const OrdersCard = ({ items, editHandler, deleteHandler }) => {
                   }
                 />
               </TableCell>
+              <TableCell align="left">{ row.payment_type === "cash" ? "COD" : "Transfer" }</TableCell>
+              <TableCell align="left" style={{color: row.payment_verified ? "#2e7d32" : "#ed6c02"}} >{ row.payment_verified ? "Verified" : "Pending" }</TableCell>
               <TableCell align="left">
                 <DateMoment format={"LLL"} date={row.transaction_date} />
               </TableCell>

@@ -36,8 +36,6 @@ const Chart = ({
       labelArr.push(dayjs().subtract(i, "day").toISOString().substring(0, 10));
     }
 
-    console.log(labelArr);
-
     setTimeout(() => {
       svGetOrderBar(start, end, type).then((res) => {
         if (res.status) {

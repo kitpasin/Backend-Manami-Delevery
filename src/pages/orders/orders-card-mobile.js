@@ -2,7 +2,8 @@ import {
   faCartShopping,
   faClock,
   faLanguage,
-  faMoneyBill
+  faMoneyBill,
+  faCreditCard
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Chip } from "@mui/material";
@@ -51,9 +52,10 @@ const OrdersCardMobile = ({ items, editHandler, deleteHandler }) => {
           </p>
           <p className="editor">
             <span className="fa-icon" title="language">
-              <FontAwesomeIcon icon={faLanguage} />
+              <FontAwesomeIcon icon={faCreditCard} />
             </span>
-            {/* <b>{item.language.toUpperCase()}</b> */}
+            <b>{item.payment_type === "transfer" ? " Transfer" : " COD"} : </b>
+            <b style={{color: item.payment_verified ? "#2e7d32" : "#ed6c02"}}>{item.payment_verified ? "Verified" : "Pending"}</b>
           </p>
           <p className="price">
             <span className="fa-icon" title="price">

@@ -58,6 +58,9 @@ const Orders = () => {
             status_id: d.status_id,
             id: d.id,
             total_price: d.total_price,
+            payment_type: d.type_payment,
+            payment_verified: d.payment_verified,
+            
           };
         });
         setOrdersData(order_data);
