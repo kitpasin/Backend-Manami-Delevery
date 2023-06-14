@@ -4,12 +4,13 @@ import Logo from "./manami_logo.png";
 
 const styles = StyleSheet.create({
   body: {
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 45,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     width: "100%",
+    fontSize: 20,
   },
   imageContainer: {
     display: "flex",
@@ -21,13 +22,19 @@ const styles = StyleSheet.create({
     width: 125,
   },
   contact: {
-    fontSize: 24,
     textAlign: "center",
     marginBottom: 10,
   },
   address: {
-    fontSize: 24,
     textAlign: "center",
+    marginBottom: 30,
+  },
+  orderContainer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 30,
   },
   textContainer: {
@@ -39,34 +46,28 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   titleLeft: {
-    fontSize: 24,
     textAlign: "left",
     width: "50%",
   },
   titleCenter: {
-    fontSize: 24,
     textAlign: "center",
-    width: "25%"
+    width: "25%",
   },
   titleRight: {
-    fontSize: 24,
     textAlign: "center",
-    width: "25%"
+    width: "25%",
   },
   descriptionLeft: {
-    fontSize: 24,
     textAlign: "left",
     width: "50%",
   },
   descriptionCenter: {
-    fontSize: 24,
     textAlign: "center",
-    width: "25%"
+    width: "25%",
   },
   descriptionRight: {
-    fontSize: 24,
     textAlign: "right",
-    width: "25%"
+    width: "25%",
   },
 });
 
@@ -109,42 +110,43 @@ const PDFFile = ({
             <Text style={styles.contact}>Line ID: {page.lineId}</Text>
             <Text style={styles.contact}>Mail: {page.mail}</Text>
             <Text style={styles.address}>{page.address}</Text>
+            <View style={styles.orderContainer}>
+              <Text>{page.order_number}</Text>
+              <Text>{page.order_date}</Text>
+            </View>
             <View style={styles.textContainer}>
-              <Text style={styles.descriptionLeft}>{page.order_number}</Text>
-              <Text style={{ width: "50%", fontSize: 24, textAlign: "right" }}>
-                {page.order_date}
-              </Text>
+              <Text style={styles.titleLeft}>List</Text>
+              <Text style={styles.titleCenter}>Unit</Text>
+              <Text style={styles.titleRight}>Price</Text>
             </View>
-            <View style={{ width: "100%", marginTop: 32 }}>
-              <View style={styles.textContainer}>
-                <Text style={styles.titleLeft}>List</Text>
-                <Text style={styles.titleCenter}>Unit</Text>
-                <Text style={styles.titleRight}>Price</Text>
-              </View>
+            <View>
+              {order_list?.map((row, index) =>
+                row.page_id === 10 ? (
+                  <View key={index} style={styles.textContainer}>
+                    <Text style={styles.descriptionLeft}>Washing {row.title}</Text>
+                    <Text style={styles.descriptionCenter}>1</Text>
+                    <Text style={styles.descriptionRight}>{row.totalPrice} THB</Text>
+                  </View>
+                ) : row.page_id === 11 ? (
+                  <View key={index} style={styles.textContainer}>
+                    <Text style={styles.descriptionLeft}>
+                      Drying {row.title}, {row.default_minutes + row.minutes_add + " Minutes"}
+                    </Text>
+                    <Text style={styles.descriptionCenter}>1</Text>
+                    <Text style={styles.descriptionRight}>{row.totalPrice} THB</Text>
+                  </View>
+                ) : (
+                  <View key={index} style={styles.textContainer}>
+                    <Text style={styles.descriptionLeft}>{row.product_name}</Text>
+                    <Text style={styles.descriptionCenter}>{row.quantity}</Text>
+                    <Text style={styles.descriptionRight}>
+                      {row.product_price * row.quantity} THB
+                    </Text>
+                  </View>
+                )
+              )}
             </View>
-            {order_list?.map((row, index) =>
-              row.page_id === 10 ? (
-                <View key={index} style={styles.textContainer}>
-                  <Text style={styles.descriptionLeft}>Washing {row.title}</Text>
-                  <Text style={styles.descriptionCenter}>1</Text>
-                  <Text style={styles.descriptionRight}>{row.totalPrice} THB</Text>
-                </View>
-              ) : row.page_id === 11 ? (
-                <View key={index} style={styles.textContainer}>
-                  <Text style={styles.descriptionLeft}>
-                    Drying {row.title}, {row.default_minutes + row.minutes_add + " Minutes"}
-                  </Text>
-                  <Text style={styles.descriptionCenter}>1</Text>
-                  <Text style={styles.descriptionRight}>{row.totalPrice} THB</Text>
-                </View>
-              ) : (
-                <View key={index} style={styles.textContainer}>
-                  <Text style={styles.descriptionLeft}>{row.product_name}</Text>
-                  <Text style={styles.descriptionCenter}>{row.quantity}</Text>
-                  <Text style={styles.descriptionRight}>{row.product_price * row.quantity} THB</Text>
-                </View>
-              )
-            )}
+
             <View style={{ width: "100%", marginTop: 32 }}>
               <View>
                 <Text style={{ marginVertical: 32, textAlign: "center" }}>
