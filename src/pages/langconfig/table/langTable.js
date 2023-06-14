@@ -105,34 +105,49 @@ function LangConfigTable(props) {
   }
 
   const OnClickDeleteHandler = async (langData) => {
-    const result = await axios.delete(`language/delete/${langData.param}`).then(response => {
-      return {status: true, description: response.data.description}
-    }, error => {
-      return {status: false, description: error.response.data.description}
+    /* Confirm to delete */
+    const confirmed = await modalSwal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: "You want to delete a language!",
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      return result.isConfirmed
     })
 
-    if(result.status) {
-      props.setRefreshData(true);
-      modalSwal.fire({
-        position: "center",
-        width: 450,
-        icon: "success",
-        title: "Successful",
-        text: result.description,
-        showConfirmButton: false,
-        timer: 1500,
+    if (confirmed) {
+      const result = await axios.delete(`language/delete/${langData.param}`).then(response => {
+        return {status: true, description: response.data.description}
+      }, error => {
+        return {status: false, description: error.response.data.description}
       })
-        
-    } else {
-      modalSwal.fire({
-        position: "center",
-        width: 450,
-        icon: "error",
-        title: "Failed",
-        text: result.description,
-        showConfirmButton: false,
-        timer: 1500,
-      })
+  
+      if(result.status) {
+        props.setRefreshData(true);
+        modalSwal.fire({
+          position: "center",
+          width: 450,
+          icon: "success",
+          title: "Successful",
+          text: result.description,
+          showConfirmButton: false,
+          timer: 1500,
+        })
+          
+      } else {
+        modalSwal.fire({
+          position: "center",
+          width: 450,
+          icon: "error",
+          title: "Failed",
+          text: result.description,
+          showConfirmButton: false,
+          timer: 1500,
+        })
+      }
     }
 
   }
