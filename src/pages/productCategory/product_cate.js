@@ -30,7 +30,7 @@ const ProductCate = () => {
 
   useEffect(() => {
     dispatch(appActions.isSpawnActive(true));
-    getProductCategory({ language: language }).then((res) => {
+    getProductCategory(language).then((res) => {
       const result = res.data.map((el) => {
         return {
           created_at: el.created_at,
