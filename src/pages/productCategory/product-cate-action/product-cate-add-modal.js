@@ -28,7 +28,7 @@ const ProductCateModalAdd = (props) => {
     thumbnail_alt: "",
     thumbnail_link: "",
     thumbnail_title: "",
-    is_food: false
+    is_food: false,
   };
 
   const { t } = useTranslation("product-cate-page");
@@ -38,7 +38,7 @@ const ProductCateModalAdd = (props) => {
   const [addData, setAddData] = useState(addDataDefault);
   const [isError, setIsError] = useState({
     thumbnail: false,
-    title: false
+    title: false,
   });
 
   useEffect(() => {
@@ -138,7 +138,7 @@ const ProductCateModalAdd = (props) => {
                           setAddData((prevState) => {
                             return {
                               ...prevState,
-                              thumbnail_title: e.target.value
+                              thumbnail_title: e.target.value,
                             };
                           })
                         }
@@ -155,7 +155,7 @@ const ProductCateModalAdd = (props) => {
                           setAddData((prevState) => {
                             return {
                               ...prevState,
-                              thumbnail_alt: e.target.value
+                              thumbnail_alt: e.target.value,
                             };
                           })
                         }
@@ -194,7 +194,7 @@ const ProductCateModalAdd = (props) => {
                           setAddData((prevState) => {
                             return {
                               ...prevState,
-                              details: e.target.value
+                              details: e.target.value,
                             };
                           })
                         }
@@ -217,7 +217,7 @@ const ProductCateModalAdd = (props) => {
                             setAddData((prevState) => {
                               return {
                                 ...prevState,
-                                display: e.target.checked
+                                display: e.target.checked,
                               };
                             })
                           }
@@ -231,7 +231,7 @@ const ProductCateModalAdd = (props) => {
                             setAddData((prevState) => {
                               return {
                                 ...prevState,
-                                is_food: e.target.checked
+                                is_food: e.target.checked,
                               };
                             })
                           }

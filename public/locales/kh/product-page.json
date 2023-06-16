@@ -9,10 +9,10 @@
   "None": "",
   "ModalSlcCtronrolPage": "PageControl",
   "ModalPriority": "priority",
-  "ModalDisplayStatus": "ไม่แสดงผล",
+  "ModalDisplayStatus": "Display",
   "btnAddProduct": "Add Product",
   "ModalSlcCategory": "Category",
-  "ModalCanWaveStatus": "เข้าไมโครเวฟได้",
-  "ModalCanSweetStatus": "เลือกความหวานได้",
-  "productEdit": "แก้ไขสินค้า"
+  "ModalCanWaveStatus": "Microwave",
+  "ModalCanSweetStatus": "Sweetness",
+  "productEdit": "Edit"
 }

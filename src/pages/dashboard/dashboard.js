@@ -145,9 +145,9 @@ const DashboardPage = () => {
             (item) => item.status_id === 4 || item.status_id === 5
           );
         } else if (viewsList === "wash&dry") {
-          data = res.data?.filter((item) => item.type_order === "washing");
+          data = res.data?.filter((item) => item.type_order === "washing" && (item.status_id === 4 || item.status_id === 5));
         } else if (viewsList === "food") {
-          data = res.data?.filter((item) => item.type_order === "foods");
+          data = res.data?.filter((item) => item.type_order === "foods" && (item.status_id === 4 || item.status_id === 5));
         } else if (viewsList === "fails") {
           data = res.data?.filter((item) => item.status_id === 5);
         } else {
@@ -155,6 +155,7 @@ const DashboardPage = () => {
         }
       }
       setOrderListTable(data);
+      console.log(res.data)
     });
   }, [viewsList]);
 

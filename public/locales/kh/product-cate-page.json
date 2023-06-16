@@ -1,7 +1,7 @@
 {
   "btnAddProductCate": "Add Category",
   "ModalInfoImage": "รูปภาพหมวดหมู่",
-  "ModalDetail": "รายละเอียด",
+  "ModalDetail": "Details",
   "ModalSlcTypeTitle": "ModalSlcTypeTitle",
   "ModalSlcTypeMain": "ModalSlcTypeMain",
   "ModalSlcTypeAds": "ModalSlcTypeAds",
@@ -9,10 +9,10 @@
   "None": "",
   "ModalSlcCtronrolPage": "PageControl",
   "ModalPriority": "priority",
-  "ModalDisplayStatus": "การแสดงผล",
-  "ModalFoodStatus": "หมวดหมู่สำหรับอาหาร",
+  "ModalDisplayStatus": "Display",
+  "ModalFoodStatus": "Foods",
   "btnAddProduct": "AddProduct",
-  "productEdit": "แก้ไขหมวดหมู่สินค้า",
+  "productEdit": "Edit Category",
   "ProductCateAdd": "เพิ่มหมวดหมู่สินค้า",
   "productCateEdit": "แก้ไขหมวดหมู่"
 }
