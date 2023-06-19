@@ -878,8 +878,9 @@ const ApproveModel = ({
     });
     setCapaId(e.target.value);
     const capa = capacity.find((el) => el.id == e.target.value);
-    setDiff(capa.price - currentCapa.totalPrice);
+    setDiff((capa.price + capa.add_shipping_cost) - currentCapa.totalPrice);
   };
+
 
   return (
     <Dialog

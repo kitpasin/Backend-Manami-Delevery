@@ -117,6 +117,7 @@ const ProductsTab = ({
         page_id: parseInt(res.data.page_id),
         pin: res.data.pin,
         price: res.data.price,
+        add_shipping_cost: res.data.add_shipping_cost,
         priority: res.data.priority,
         thumbnail_alt: res.data.thumbnail_alt || "",
         thumbnail_link: res.data.thumbnail_link || "",

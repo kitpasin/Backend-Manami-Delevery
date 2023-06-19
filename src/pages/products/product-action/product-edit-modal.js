@@ -93,6 +93,7 @@ const ProductModalEdit = (props) => {
     formData.append("can_wave", editData.can_wave ? 1 : 0);
     formData.append("details", editData.details);
     formData.append("price", editData.price);
+    formData.append("add_shipping_cost", editData.add_shipping_cost);
     formData.append("language", language);
     formData.append("price_per_minutes", editData.price_per_minutes);
     formData.append("round_minutes", editData.round_minutes);
@@ -277,6 +278,25 @@ const ProductModalEdit = (props) => {
                         error={false}
                         id="ad-price"
                         label="price"
+                        size="small"
+                      />
+                    </div>
+                    <div className="input-xl-half">
+                      <TextField
+                        onChange={(e) =>
+                          setEditData((prevState) => {
+                            return {
+                              ...prevState,
+                              add_shipping_cost: !isNaN(parseInt(e.target.value))?parseInt(e.target.value):0
+                            };
+                          })
+                        }
+                        value={editData.add_shipping_cost}
+                        className="text-field-custom"
+                        fullWidth={true}
+                        error={false}
+                        id="ad-delivery-price"
+                        label="add shipping cost"
                         size="small"
                       />
                     </div>
