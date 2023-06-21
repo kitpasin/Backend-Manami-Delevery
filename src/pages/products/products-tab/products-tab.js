@@ -17,7 +17,10 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import ContentCardUI from "../../../components/ui/content-card/content-card";
 import DateMoment from "../../../components/ui/date-moment/date-moment";
-import { svDeleteProduct, svGetProductById } from "../../../services/product.service";
+import {
+  svDeleteProduct,
+  svGetProductById,
+} from "../../../services/product.service";
 import { getProductCategory } from "../../../services/product-category.service";
 import { getCategoryProduct } from "../../../services/category.service";
 import { appActions } from "../../../store/app-slice";
@@ -27,6 +30,7 @@ import SwalUI from "../../../components/ui/swal-ui/swal-ui";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { useTranslation } from "react-i18next";
+import TextField from "@mui/material/TextField";
 
 const ProductsTab = ({
   productModalAdd,
@@ -38,7 +42,9 @@ const ProductsTab = ({
   setTabSelect,
 }) => {
   const dispatch = useDispatch();
-  const isSuperAdmin = useSelector((state) => state.auth.userPermission.superAdmin);
+  const isSuperAdmin = useSelector(
+    (state) => state.auth.userPermission.superAdmin
+  );
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [limited, setLimited] = useState({ begin: 0, end: rowsPerPage });
   const [page, setPage] = useState(0);
@@ -55,6 +61,7 @@ const ProductsTab = ({
   const [editProduct, setEditProduct] = useState({});
   const [productCate, setProductCate] = useState([]);
   const [cateForProduct, setCateForProduct] = useState([]);
+  const [textSearch, setTextSearch] = useState("");
 
   const tabLists = [
     { value: "", title: "All", icon: <FontAwesomeIcon icon={faFolderOpen} /> },
@@ -177,6 +184,7 @@ const ProductsTab = ({
 
   // Select Product Category
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
+  const [searchProduct, setSearchProduct] = useState([]);
 
   useEffect(() => {
     getProductCategory(language).then((res) => {
@@ -186,16 +194,19 @@ const ProductsTab = ({
       setCateForProduct(res.data);
     });
 
-    const result = slideData?.filter((d) => {
+    const products = slideData.filter((item) =>
+      item.title.toLowerCase().includes(textSearch.toLowerCase())
+    );
+
+    const result = products?.filter((d) => {
       if (tabSelect !== "hidden") {
         return (
-          (selectedCategoryId === "" || d.cate_id === selectedCategoryId) // Check if the selected category ID matches
+          selectedCategoryId === "" || d.cate_id === selectedCategoryId // Check if the selected category ID matches
         );
       } else {
         if (d.display === false) {
           return (
-
-            (selectedCategoryId === "" || d.cate_id === selectedCategoryId) // Check if the selected category ID matches
+            selectedCategoryId === "" || d.cate_id === selectedCategoryId // Check if the selected category ID matches
           );
         }
       }
@@ -204,16 +215,14 @@ const ProductsTab = ({
       setTotalData(result.length);
       setFilteredData(result.slice(limited.begin, limited.end));
     }
-  }, [tabSelect, slideData, page, rowsPerPage, selectedCategoryId]);
+  }, [tabSelect, slideData, page, rowsPerPage, selectedCategoryId, textSearch]);
 
-   const handleChangeSelect = (event) => {
-     const selectedId = event.target.value;
-     const result = slideData.filter((item) => item.id === selectedId);
-     setFilteredData(result);
-     setSelectedCategoryId(selectedId); // Update the selected category ID state
-   };
-
-
+  const handleChangeSelect = (event) => {
+    const selectedId = event.target.value;
+    const result = slideData.filter((item) => item.id === selectedId);
+    setFilteredData(result);
+    setSelectedCategoryId(selectedId); // Update the selected category ID state
+  };
 
   return (
     <Fragment>
@@ -243,9 +252,7 @@ const ProductsTab = ({
                 style={{ width: "150px", height: "35px", margin: "1rem" }}
                 displayEmpty
               >
-                <MenuItem value="">
-                  {t("All")}
-                </MenuItem>
+                <MenuItem value="">{t("All")}</MenuItem>
                 {productCate?.map((p) => {
                   // Check if tabSelect and p.id
                   if (tabSelect === "") {
@@ -254,15 +261,13 @@ const ProductsTab = ({
                         {p.title}
                       </MenuItem>
                     );
-                  }
-                  else if (tabSelect === "9" && [1, 2].includes(p.id)) {
+                  } else if (tabSelect === "9" && [1, 2].includes(p.id)) {
                     return (
                       <MenuItem key={p.id} value={p.id}>
                         {p.title}
                       </MenuItem>
                     );
-                  } 
-                  else if (
+                  } else if (
                     (tabSelect === "10" && [3, 4].includes(p.id)) ||
                     (tabSelect === "11" && [3].includes(p.id))
                   ) {
@@ -271,31 +276,42 @@ const ProductsTab = ({
                         {p.title}
                       </MenuItem>
                     );
-                  }
-                  else if (tabSelect === "15" && [13, 14, 15, 16, 17, 18, 19].includes(p.id)) {
+                  } else if (
+                    tabSelect === "15" &&
+                    [13, 14, 15, 16, 17, 18, 19].includes(p.id)
+                  ) {
                     return (
                       <MenuItem key={p.id} value={p.id}>
                         {p.title}
                       </MenuItem>
                     );
-                  } 
-                  else if (tabSelect === "hidden") {
+                  } else if (tabSelect === "hidden") {
                     return (
                       <MenuItem key={p.id} value={p.id}>
                         {p.title}
                       </MenuItem>
                     );
                   }
-                  
+
                   // Render all other items
                   return null;
                 })}
               </Select>
+              <div className="search-input">
+                <TextField
+                  id="outlined-required"
+                  label="search product"
+                  size="small"
+                  onInput={(e) => setTextSearch(e.target.value)}
+                />
+              </div>
             </div>
           </Box>
           {tabLists.map((tab) => (
             <TabPanel
-              className={`slide-tab-body ${isRowDisplay ? "asRow" : "asColumn"}`}
+              className={`slide-tab-body ${
+                isRowDisplay ? "asRow" : "asColumn"
+              }`}
               value={tab.value}
               key={tab.value}
             >
@@ -326,7 +342,10 @@ const ProductsTab = ({
                             <FontAwesomeIcon icon={faClock} />
                           </span>
                           <span>
-                            <DateMoment format={"LLL"} date={item.createdDate} />
+                            <DateMoment
+                              format={"LLL"}
+                              date={item.createdDate}
+                            />
                           </span>
                         </Fragment>
                       )}

@@ -7,7 +7,13 @@
 }
 
 .category {
+  @apply flex items-center justify-between;
   width: 100%;
+
+  .search-input {
+    @apply p-4;
+  }
+  
 }
 
 #search {
