@@ -56,8 +56,8 @@ export const svVerifiedItem = (formBody) => {
     )
 }
 
-export const svUpdateProductList = (quantity, id, orders_number) => {
-    return axios.post(`order/product/update/${id}`, {quantity: quantity, orders_number: orders_number}).then(
+export const svUpdateProductList = (quantity, id, orders_number, sauce_value) => {
+    return axios.post(`order/product/update/${id}`, {quantity: quantity, orders_number: orders_number, sauce_value: sauce_value}).then(
     (res) => { return { status: true, data: res.data }},
     (error) => { return { status: false, description: (!error.response.data)?"Something went wrong":error.response.data.description }}
     )

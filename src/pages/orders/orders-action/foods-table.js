@@ -25,7 +25,7 @@ import { svDeleteProductItem } from "../../../services/orders.service";
 
 import { useState } from "react";
 
-const FoodsTable = ({ orderList, orderShow, setOrderShow, }) => {
+const FoodsTable = ({ orderList, orderShow, setOrderShow }) => {
   const uploadPath = useSelector((state) => state.app.uploadPath);
   const [open, setOpen] = React.useState(false);
   const [productList, setProductList] = useState({});
@@ -103,7 +103,7 @@ const FoodsTable = ({ orderList, orderShow, setOrderShow, }) => {
       });
   };
 
-  // console.log(orderList)
+  console.log(orderList);
 
   return (
     <Table
@@ -121,6 +121,7 @@ const FoodsTable = ({ orderList, orderShow, setOrderShow, }) => {
           <TableCell align="left">Quantity</TableCell>
           <TableCell align="left">Microwave</TableCell>
           <TableCell align="left">Sweetness</TableCell>
+          <TableCell align="left">Sauce</TableCell>
           <TableCell align="left">Requirements</TableCell>
           {(status_id === 2 || status_id === 3) &&
             (uPermission.superAdmin || uPermission.admin) && (
@@ -149,11 +150,22 @@ const FoodsTable = ({ orderList, orderShow, setOrderShow, }) => {
               </TableCell>
               <TableCell align="left">{row.product_name}</TableCell>
               <TableCell align="center">{row.cate_title}</TableCell>
-              <TableCell align="center">{row.price + " " + orderShow.currency_symbol}</TableCell>
+              <TableCell align="center">
+                {row.price + " " + orderShow.currency_symbol}
+              </TableCell>
               <TableCell align="center">X{row.quantity}</TableCell>
               <TableCell align="center">{row.microwave_name}</TableCell>
               <TableCell align="center">{row.sweetness_name}</TableCell>
-              <TableCell align="center" sx={{fontWeight: "600"}} >{row.requirements}</TableCell>
+              <TableCell align="center">
+                {row.sauce_type === 1
+                  ? "Tomato X" + row.sauce_value
+                  : row.sauce_type === 2
+                  ? "Chili X" + row.sauce_value
+                  : ""}
+              </TableCell>
+              <TableCell align="center" sx={{ fontWeight: "600" }}>
+                {row.requirements}
+              </TableCell>
               {(status_id === 2 || status_id === 3) &&
                 (uPermission.superAdmin || uPermission.admin) && (
                   <TableCell
@@ -222,61 +234,76 @@ const ModalEdit = ({
       });
     }
   };
+  const sauceHandle = (isAdding) => {
+    if (isAdding) {
+      if (productList.sauce_value >= 10) return false;
+      setProductList((prev) => {
+        return { ...prev, sauce_value: productList.sauce_value + 1 };
+      });
+    } else {
+      if (productList.sauce_value <= 0) return false;
+      setProductList((prev) => {
+        return { ...prev, sauce_value: productList.sauce_value - 1 };
+      });
+    }
+  };
 
-  const saveHandle = (_id, quantity) => {
-    svUpdateProductList(quantity, _id, productList.orders_number).then(
-      (res) => {
-        if (res.status) {
-          console.log(res);
-          SwalUI({ status: res.status, description: res.data.description });
-          svGetOrderByOrderNumber({
-            orders_number: productList.orders_number,
-            type: "foods",
-          }).then(({ data: d }) => {
-            const result = {
-              orders_number: d.orders_number,
-              delivery_drop_address: d.delivery_drop_address,
-              delivery_drop_address_more: d.delivery_drop_address_more,
-              delivery_pickup_address: d.delivery_pickup_address,
-              delivery_pickup_address_more: d.delivery_pickup_address_more,
-              details: d.details,
-              phone_number: d.phone_number,
-              status: d.status_name.toLowerCase(),
-              transaction_date: d.transaction_date,
-              shipping_date: d.shipping_date,
-              type_order: d.type_order,
-              date_pickup: d.date_pickup,
-              date_drop: d.date_drop,
-              pickup_image: d.pickup_image,
-              drop_image: d.drop_image,
-              member_name: d.member_name,
-              branch_name: d.branch_name,
-              branch_id: d.branch_id,
-              delivery_pickup: d.delivery_pickup,
-              delivery_drop: d.delivery_drop,
-              orderList: d.orderList,
-              totalPrice: d.totalPrice,
-              delivery_price: d.delivery_price,
-              status_id: d.status_id,
-              slip_image: d.slip_image,
-              type_payment: d.type_payment,
-              payment_verified: !!d.payment_verified,
-              line_id: d.line_id,
-              wechat: d.wechat,
-              telegram: d.telegram,
-              upload_images: d.upload_images,
-              distance: d.distance,
-              currency_symbol: d.currency,
-            };
-            setOrderShow(result);
-            setOrderProductList(result.orderList);
-          });
-        } else {
-          SwalUI({ status: false, description: "Error!" });
-        }
-        setOpen(false);
+  const saveHandle = (_id, quantity, sauce_value) => {
+    svUpdateProductList(
+      quantity,
+      _id,
+      productList.orders_number,
+      sauce_value
+    ).then((res) => {
+      if (res.status) {
+        SwalUI({ status: res.status, description: res.data.description });
+        svGetOrderByOrderNumber({
+          orders_number: productList.orders_number,
+          type: "foods",
+        }).then(({ data: d }) => {
+          const result = {
+            orders_number: d.orders_number,
+            delivery_drop_address: d.delivery_drop_address,
+            delivery_drop_address_more: d.delivery_drop_address_more,
+            delivery_pickup_address: d.delivery_pickup_address,
+            delivery_pickup_address_more: d.delivery_pickup_address_more,
+            details: d.details,
+            phone_number: d.phone_number,
+            status: d.status_name.toLowerCase(),
+            transaction_date: d.transaction_date,
+            shipping_date: d.shipping_date,
+            type_order: d.type_order,
+            date_pickup: d.date_pickup,
+            date_drop: d.date_drop,
+            pickup_image: d.pickup_image,
+            drop_image: d.drop_image,
+            member_name: d.member_name,
+            branch_name: d.branch_name,
+            branch_id: d.branch_id,
+            delivery_pickup: d.delivery_pickup,
+            delivery_drop: d.delivery_drop,
+            orderList: d.orderList,
+            totalPrice: d.totalPrice,
+            delivery_price: d.delivery_price,
+            status_id: d.status_id,
+            slip_image: d.slip_image,
+            type_payment: d.type_payment,
+            payment_verified: !!d.payment_verified,
+            line_id: d.line_id,
+            wechat: d.wechat,
+            telegram: d.telegram,
+            upload_images: d.upload_images,
+            distance: d.distance,
+            currency_symbol: d.currency,
+          };
+          setOrderShow(result);
+          setOrderProductList(result.orderList);
+        });
+      } else {
+        SwalUI({ status: false, description: "Error!" });
       }
-    );
+      setOpen(false);
+    });
   };
 
   const style = {
@@ -284,13 +311,15 @@ const ModalEdit = ({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 500,
+    width: 350,
     bgcolor: "background.paper",
     border: "none",
     borderRadius: "10px",
     boxShadow: 24,
     p: 4,
   };
+
+  console.log(productList);
   return (
     <Modal
       open={open}
@@ -298,13 +327,13 @@ const ModalEdit = ({
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={style}>
+      <Box sx={style} className="">
         <Typography id="modal-modal-title" variant="h6" component="h2">
           Edit Product Item
         </Typography>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
           {productList.product_name}
-          <div className="input-group">
+          <div className="input-group" sx={{ width: 100 }}>
             <ButtonUI color="error" onClick={(e) => quantityHandle(false)}>
               <FontAwesomeIcon icon={faMinus} />
             </ButtonUI>
@@ -316,6 +345,21 @@ const ModalEdit = ({
               <FontAwesomeIcon icon={faAdd} />
             </ButtonUI>
           </div>
+          {productList.sauce_type !== 0 && (
+            <div className="input-group" sx={{ width: 100 }}>
+              <ButtonUI color="error" onClick={(e) => sauceHandle(false)}>
+                <FontAwesomeIcon icon={faMinus} />
+              </ButtonUI>
+              <Typography component={"span"}>
+                Sauce ({productList.sauce_type === 1 ? "Tomato" : "Chili"}) X
+                {productList.sauce_value}
+              </Typography>
+              {/* <span className="title"></span> */}
+              <ButtonUI onClick={(e) => sauceHandle(true)}>
+                <FontAwesomeIcon icon={faAdd} />
+              </ButtonUI>
+            </div>
+          )}
         </Typography>
         <div
           className="button-footer"
@@ -329,7 +373,13 @@ const ModalEdit = ({
         >
           <Button
             variant="contained"
-            onClick={(e) => saveHandle(productList.id, productList.quantity)}
+            onClick={(e) =>
+              saveHandle(
+                productList.id,
+                productList.quantity,
+                productList.sauce_value
+              )
+            }
             sx={{ height: "30px" }}
           >
             save
