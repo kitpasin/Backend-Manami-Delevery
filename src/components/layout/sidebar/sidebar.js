@@ -433,7 +433,7 @@ const SidebarComponent = (props) => {
                     </NavLink>
                   )}
 
-                {pagesAllow.languages && (uPermission.superAdmin || uPermission.admin) && (
+                {pagesAllow.languages && (uPermission.superAdmin) && (
                   <NavLink
                     onClick={closeSidebarhandler}
                     to="/languages"

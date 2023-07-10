@@ -88,6 +88,7 @@ const OrdersModal = ({
   const srcError = "/images/no-image.png";
   const [imgError, setImgError] = useState({ pickup: false, drop: false });
   const isSuperAdmin = useSelector((state) => state.auth.userPermission.superAdmin);
+  const isAdmin = useSelector((state) => state.auth.userPermission.admin);
   const [showDialog, setShowDialog] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -480,7 +481,7 @@ const OrdersModal = ({
                     </div>
                   )}
                 </div>
-                {isSuperAdmin && (
+                {(isSuperAdmin || isAdmin) && (
                   <div
                     className="status"
                     style={{ display: "flex", alignItems: "center", gap: "1rem" }}
