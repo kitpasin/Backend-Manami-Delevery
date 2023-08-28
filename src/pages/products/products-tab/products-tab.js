@@ -188,6 +188,7 @@ const ProductsTab = ({
 
   useEffect(() => {
     getProductCategory(language).then((res) => {
+      console.log(res.data)
       setProductCate(res.data);
     });
     getCategoryProduct(language).then((res) => {
@@ -277,8 +278,7 @@ const ProductsTab = ({
                       </MenuItem>
                     );
                   } else if (
-                    tabSelect === "15" &&
-                    [13, 14, 15, 16, 17, 18, 19].includes(p.id)
+                    tabSelect === "15" && p.is_food === 1
                   ) {
                     return (
                       <MenuItem key={p.id} value={p.id}>
